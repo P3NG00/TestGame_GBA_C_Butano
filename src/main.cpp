@@ -1,9 +1,14 @@
 #include "bn_core.h"
 #include "bn_keypad.h"
+#include "bn_sprite_font.h"
 #include "bn_sprite_ptr.h"
+#include "bn_sprite_text_generator.h"
 #include "bn_sprite_tiles_ptr.h"
+#include "bn_vector.h"
 
 #include "bn_sprite_items_player.h"
+
+#include "common_variable_8x16_sprite_font.h"
 
 using namespace bn;
 
@@ -23,6 +28,10 @@ int main()
     core::init();
 
     // create game assets
+    sprite_text_generator text_generator(common::variable_8x16_sprite_font);
+    text_generator.set_center_alignment();
+    vector<sprite_ptr, 32> text_sprites;
+    text_generator.generate(0, 0, "Hello, world!", text_sprites);
     sprite_ptr player_sprite = sprite_items::player.create_sprite(0, 0);
     player_sprite_ptr = &player_sprite;
 
