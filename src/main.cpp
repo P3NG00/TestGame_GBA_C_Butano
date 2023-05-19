@@ -4,6 +4,7 @@
 #include "bn_sprite_ptr.h"
 #include "bn_sprite_text_generator.h"
 #include "bn_sprite_tiles_ptr.h"
+#include "bn_string_view.h"
 #include "bn_vector.h"
 
 #include "bn_sprite_items_player.h"
@@ -14,9 +15,12 @@ using namespace bn;
 
 // method declarations
 void handle_input();
+void create_text(int x, int y, string_view str);
 
 // global variables
 sprite_ptr* player_sprite_ptr;
+sprite_text_generator text_generator = sprite_text_generator(common::variable_8x16_sprite_font);
+vector<sprite_ptr, 16> text_sprites = vector<sprite_ptr, 16>();
 int player_dx = 0;
 int player_dy = 0;
 int last_sprite_index = 0;
@@ -28,10 +32,8 @@ int main()
     core::init();
 
     // create game assets
-    sprite_text_generator text_generator(common::variable_8x16_sprite_font);
     text_generator.set_center_alignment();
-    vector<sprite_ptr, 32> text_sprites;
-    text_generator.generate(0, 0, "Hello, world!", text_sprites);
+    create_text(0, 0, "Hello, world!");
     sprite_ptr player_sprite = sprite_items::player.create_sprite(0, 0);
     player_sprite_ptr = &player_sprite;
 
@@ -88,4 +90,9 @@ void handle_input()
         player_sprite_ptr->set_tiles(sprite_items::player.tiles_item().create_tiles(new_sprite_index));
         last_sprite_index = new_sprite_index;
     }
+}
+
+void create_text(int x, int y, string_view str)
+{
+    text_generator.generate(x, y, str, text_sprites);
 }
