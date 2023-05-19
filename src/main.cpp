@@ -50,9 +50,11 @@ void handle_input()
         player_dx--;
     if (keypad::right_held())
         player_dx++;
+
     // update position
     player_sprite_ptr->set_x(player_sprite_ptr->x() + player_dx);
     player_sprite_ptr->set_y(player_sprite_ptr->y() + player_dy);
+
     // find sprite index
     if      (player_dx ==  1 && player_dy == -1)
         new_sprite_index = 1;
@@ -70,6 +72,7 @@ void handle_input()
         new_sprite_index = 7;
     else
         new_sprite_index = 0;
+
     // update sprite check
     if (new_sprite_index != last_sprite_index)
     {
