@@ -1,6 +1,7 @@
 #include "bn_core.h"
 #include "bn_keypad.h"
 #include "bn_sprite_ptr.h"
+#include "bn_sprite_tiles_ptr.h"
 
 #include "bn_sprite_items_player.h"
 
@@ -11,6 +12,10 @@ void handle_input();
 
 // global variables
 sprite_ptr* player_sprite_ptr;
+int player_dx = 0;
+int player_dy = 0;
+int last_sprite_index = 0;
+int new_sprite_index = 0;
 
 int main()
 {
@@ -35,12 +40,40 @@ int main()
 void handle_input()
 {
     // player movement
+    player_dx = 0;
+    player_dy = 0;
     if (keypad::up_held())
-        player_sprite_ptr->set_y(player_sprite_ptr->y() - 1);
+        player_dy--;
     if (keypad::down_held())
-        player_sprite_ptr->set_y(player_sprite_ptr->y() + 1);
+        player_dy++;
     if (keypad::left_held())
-        player_sprite_ptr->set_x(player_sprite_ptr->x() - 1);
+        player_dx--;
     if (keypad::right_held())
-        player_sprite_ptr->set_x(player_sprite_ptr->x() + 1);
+        player_dx++;
+    // update position
+    player_sprite_ptr->set_x(player_sprite_ptr->x() + player_dx);
+    player_sprite_ptr->set_y(player_sprite_ptr->y() + player_dy);
+    // find sprite index
+    if      (player_dx ==  1 && player_dy == -1)
+        new_sprite_index = 1;
+    else if (player_dx ==  1 && player_dy ==  0)
+        new_sprite_index = 2;
+    else if (player_dx ==  1 && player_dy ==  1)
+        new_sprite_index = 3;
+    else if (player_dx ==  0 && player_dy ==  1)
+        new_sprite_index = 4;
+    else if (player_dx == -1 && player_dy ==  1)
+        new_sprite_index = 5;
+    else if (player_dx == -1 && player_dy ==  0)
+        new_sprite_index = 6;
+    else if (player_dx == -1 && player_dy == -1)
+        new_sprite_index = 7;
+    else
+        new_sprite_index = 0;
+    // update sprite check
+    if (new_sprite_index != last_sprite_index)
+    {
+        player_sprite_ptr->set_tiles(sprite_items::player.tiles_item().create_tiles(new_sprite_index));
+        last_sprite_index = new_sprite_index;
+    }
 }
