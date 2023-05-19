@@ -7,7 +7,10 @@
 using namespace bn;
 
 // method declarations
-void handle_input(sprite_ptr player_sprite);
+void handle_input();
+
+// global variables
+sprite_ptr* player_sprite_ptr;
 
 int main()
 {
@@ -16,27 +19,28 @@ int main()
 
     // create game assets
     sprite_ptr player_sprite = sprite_items::player.create_sprite(0, 0);
+    player_sprite_ptr = &player_sprite;
 
     // game loop
     while(true)
     {
         // handle input
-        handle_input(player_sprite);
+        handle_input();
 
         // update butano last
         core::update();
     }
 }
 
-void handle_input(sprite_ptr player_sprite)
+void handle_input()
 {
     // player movement
     if (keypad::up_held())
-        player_sprite.set_y(player_sprite.y() - 1);
+        player_sprite_ptr->set_y(player_sprite_ptr->y() - 1);
     if (keypad::down_held())
-        player_sprite.set_y(player_sprite.y() + 1);
+        player_sprite_ptr->set_y(player_sprite_ptr->y() + 1);
     if (keypad::left_held())
-        player_sprite.set_x(player_sprite.x() - 1);
+        player_sprite_ptr->set_x(player_sprite_ptr->x() - 1);
     if (keypad::right_held())
-        player_sprite.set_x(player_sprite.x() + 1);
+        player_sprite_ptr->set_x(player_sprite_ptr->x() + 1);
 }
