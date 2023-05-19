@@ -7,10 +7,11 @@
 #include "bn_string_view.h"
 #include "bn_vector.h"
 
+// include assets
 #include "bn_sprite_items_player.h"
-
 #include "common_variable_8x16_sprite_font.h"
 
+// use butano namespace
 using namespace bn;
 
 // method declarations
@@ -31,7 +32,7 @@ int main()
     // init butano
     core::init();
 
-    // create game assets
+    // initialize game assets
     text_generator.set_center_alignment();
     create_text(0, 0, "Hello, world!");
     sprite_ptr player_sprite = sprite_items::player.create_sprite(0, 0);
