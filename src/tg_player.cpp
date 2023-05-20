@@ -1,15 +1,13 @@
-#include "tg_player.hpp"
-
 #include "bn_keypad.h"
-#include "bn_sprite_item.h"
-#include "bn_sprite_ptr.h"
 #include "bn_sprite_tiles_ptr.h"
 
 #include "bn_sprite_items_player.h"
 
-player::player(bn::sprite_item player_sprite)
+#include "tg_player.hpp"
+
+player::player()
 {
-    _player_sprite_ptr = new bn::sprite_ptr(player_sprite.create_sprite(0, 0));
+    _player_sprite_ptr = new bn::sprite_ptr(bn::sprite_items::player.create_sprite(0, 0));
 }
 
 void player::handle_input()
