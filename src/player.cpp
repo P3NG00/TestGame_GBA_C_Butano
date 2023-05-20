@@ -23,8 +23,11 @@ void Player::handle_input()
         _player_dx++;
 
     // update position
-    _player_sprite_ptr->set_x(_player_sprite_ptr->x() + _player_dx);
-    _player_sprite_ptr->set_y(_player_sprite_ptr->y() + _player_dy);
+    if (!bn::keypad::l_held())
+    {
+        _player_sprite_ptr->set_x(_player_sprite_ptr->x() + _player_dx);
+        _player_sprite_ptr->set_y(_player_sprite_ptr->y() + _player_dy);
+    }
 
     // find sprite index
     _new_sprite_index = -1;
