@@ -1,4 +1,4 @@
-#include "player.hpp"
+#include "tg_player.hpp"
 
 #include "bn_keypad.h"
 #include "bn_sprite_item.h"

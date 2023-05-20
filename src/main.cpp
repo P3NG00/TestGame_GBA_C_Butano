@@ -7,7 +7,7 @@
 #include "bn_vector.h"
 
 // include assets
-#include "player.hpp"
+#include "tg_player.hpp"
 #include "bn_sprite_items_player.h"
 #include "common_variable_8x16_sprite_font.h"
 
