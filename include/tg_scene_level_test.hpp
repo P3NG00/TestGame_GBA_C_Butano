@@ -13,7 +13,7 @@ class scene_level_test
 
 public:
 
-    void initialize();
+    scene_level_test();
     void update();
 };
 

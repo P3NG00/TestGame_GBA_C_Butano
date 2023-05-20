@@ -1,9 +1,8 @@
 #include "tg_scene_level_test.hpp"
 
-void scene_level_test::initialize()
+scene_level_test::scene_level_test()
 {
-    // TODO
-    // _text_handler_obj.create_text(0, 0, "Hello, world!");
+    // TODO initialize elements
 }
 
 void scene_level_test::update()

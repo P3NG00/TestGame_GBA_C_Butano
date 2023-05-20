@@ -13,7 +13,6 @@ int main()
 
     // initialize test level scene
     scene_level_test scene_level_test_obj = scene_level_test();
-    scene_level_test_obj.initialize();
 
     // game loop
     while(true)
