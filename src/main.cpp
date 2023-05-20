@@ -11,17 +11,14 @@
 #include "bn_sprite_items_player.h"
 #include "common_variable_8x16_sprite_font.h"
 
-// use butano namespace
-using namespace bn;
-
 // method declarations
 void handle_input();
-void create_text(int x, int y, string_view str);
+void create_text(int x, int y, bn::string_view str);
 
 // global variables
-sprite_ptr* player_sprite_ptr;
-sprite_text_generator text_generator = sprite_text_generator(common::variable_8x16_sprite_font);
-vector<sprite_ptr, 16> text_sprites = vector<sprite_ptr, 16>();
+bn::sprite_ptr* player_sprite_ptr;
+bn::sprite_text_generator text_generator = bn::sprite_text_generator(common::variable_8x16_sprite_font);
+bn::vector<bn::sprite_ptr, 16> text_sprites = bn::vector<bn::sprite_ptr, 16>();
 int player_dx = 0;
 int player_dy = 0;
 int last_sprite_index = 0;
@@ -30,12 +27,12 @@ int new_sprite_index = 0;
 int main()
 {
     // init butano
-    core::init();
+    bn::core::init();
 
     // initialize game assets
     text_generator.set_center_alignment();
     create_text(0, 0, "Hello, world!");
-    sprite_ptr player_sprite = sprite_items::player.create_sprite(0, 0);
+    bn::sprite_ptr player_sprite = bn::sprite_items::player.create_sprite(0, 0);
     player_sprite_ptr = &player_sprite;
 
     // game loop
@@ -45,7 +42,7 @@ int main()
         handle_input();
 
         // update butano last
-        core::update();
+        bn::core::update();
     }
 }
 
@@ -54,13 +51,13 @@ void handle_input()
     // player movement
     player_dx = 0;
     player_dy = 0;
-    if (keypad::up_held())
+    if (bn::keypad::up_held())
         player_dy--;
-    if (keypad::down_held())
+    if (bn::keypad::down_held())
         player_dy++;
-    if (keypad::left_held())
+    if (bn::keypad::left_held())
         player_dx--;
-    if (keypad::right_held())
+    if (bn::keypad::right_held())
         player_dx++;
 
     // update position
@@ -88,12 +85,12 @@ void handle_input()
     // update sprite check
     if (new_sprite_index != last_sprite_index)
     {
-        player_sprite_ptr->set_tiles(sprite_items::player.tiles_item().create_tiles(new_sprite_index));
+        player_sprite_ptr->set_tiles(bn::sprite_items::player.tiles_item().create_tiles(new_sprite_index));
         last_sprite_index = new_sprite_index;
     }
 }
 
-void create_text(int x, int y, string_view str)
+void create_text(int x, int y, bn::string_view str)
 {
     text_generator.generate(x, y, str, text_sprites);
 }
