@@ -1,8 +1,6 @@
 #include "bn_core.h"
 
-#include "tg_player.hpp"
-#include "tg_projectile.hpp"
-#include "tg_text_handler.hpp"
+#include "tg_scene_level_test.hpp"
 
 int main()
 {
@@ -10,19 +8,14 @@ int main()
     bn::core::init();
 
     // initialize game assets
-    text_handler text_handler_obj = text_handler();
-    text_handler_obj.create_text(0, 0, "Hello, world!");
-    player player_obj = player();
-    projectile projectile_obj = projectile();
+    scene_level_test scene_level_test_obj = scene_level_test();
+    scene_level_test_obj.initialize();
 
     // game loop
     while(true)
     {
         // handle input
-        player_obj.handle_input(&projectile_obj);
-
-        // update projectile
-        projectile_obj.update();
+        scene_level_test_obj.update();
 
         // update butano last
         bn::core::update();
