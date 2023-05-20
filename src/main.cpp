@@ -1,5 +1,6 @@
 #include "bn_core.h"
 #include "bn_keypad.h"
+#include "bn_sprite_item.h"
 #include "bn_sprite_ptr.h"
 #include "bn_sprite_text_generator.h"
 #include "bn_string_view.h"
@@ -25,8 +26,7 @@ int main()
     // initialize game assets
     text_generator.set_center_alignment();
     create_text(0, 0, "Hello, world!");
-    bn::sprite_ptr player_sprite = bn::sprite_items::player.create_sprite(0, 0);
-    Player player(&player_sprite);
+    Player player(bn::sprite_items::player);
 
     // game loop
     while(true)

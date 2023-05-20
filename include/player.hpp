@@ -1,4 +1,5 @@
 #include "bn_sprite_ptr.h"
+#include "bn_sprite_item.h"
 
 class Player
 {
@@ -8,6 +9,6 @@ class Player
     int _last_sprite_index = 0;
     int _new_sprite_index = 0;
 public:
-    Player(bn::sprite_ptr* player_sprite_ptr);
+    Player(bn::sprite_item player_sprite);
     void handle_input();
 };

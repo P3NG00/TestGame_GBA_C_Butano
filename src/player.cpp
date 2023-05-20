@@ -1,12 +1,16 @@
 #include "player.hpp"
 
 #include "bn_keypad.h"
+#include "bn_sprite_item.h"
 #include "bn_sprite_ptr.h"
 #include "bn_sprite_tiles_ptr.h"
 
 #include "bn_sprite_items_player.h"
 
-Player::Player(bn::sprite_ptr* player_sprite_ptr) : _player_sprite_ptr(player_sprite_ptr) {}
+Player::Player(bn::sprite_item player_sprite)
+{
+    _player_sprite_ptr = new bn::sprite_ptr(player_sprite.create_sprite(0, 0));
+}
 
 void Player::handle_input()
 {
