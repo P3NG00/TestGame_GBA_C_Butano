@@ -7,7 +7,7 @@ projectile::projectile()
     // _sprite_ptr.set_visible(false); TODO
 }
 
-void projectile::set(bn::fixed x, bn::fixed y, int dx, int dy)
+void projectile::set(bn::fixed x, bn::fixed y, bn::fixed dx, bn::fixed dy)
 {
     _sprite_ptr.set_position(x, y);
     _dx = dx;

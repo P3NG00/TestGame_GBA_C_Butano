@@ -1,6 +1,7 @@
 #ifndef TG_PLAYER_HPP
 #define TG_PLAYER_HPP
 
+#include "bn_fixed.h"
 #include "bn_sprite_ptr.h"
 
 #include "bn_sprite_items_player.h"
@@ -10,8 +11,8 @@
 class player
 {
     bn::sprite_ptr _sprite_ptr = bn::sprite_items::player.create_sprite(0, 0);
-    int _dx = 0;
-    int _dy = 0;
+    bn::fixed _dx = 0;
+    bn::fixed _dy = 0;
     int _last_sprite_index = 0;
     int _new_sprite_index = 0;
 

@@ -2,7 +2,8 @@
 
 void scene_level_test::initialize()
 {
-    _text_handler_obj.create_text(0, 0, "Hello, world!");
+    // TODO
+    // _text_handler_obj.create_text(0, 0, "Hello, world!");
 }
 
 void scene_level_test::update()
