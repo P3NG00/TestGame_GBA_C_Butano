@@ -1,5 +1,6 @@
 #include "bn_blending.h"
 #include "bn_core.h"
+#include "bn_keypad.h"
 
 #include "tg_scene_startup.hpp"
 
@@ -8,7 +9,7 @@ void scene_startup::execute()
     bn::fixed time_fade = seconds_to_frames(1);
     _bg_logo.set_blending_enabled(true);
 
-    while (_counter > 0)
+    while (_counter > 0 && !bn::keypad::start_pressed())
     {
         _counter -= 1;
 
