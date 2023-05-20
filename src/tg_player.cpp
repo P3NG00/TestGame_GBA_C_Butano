@@ -8,7 +8,7 @@
 
 #define NORMALIZED 0.7071
 
-void player::handle_input(projectile* projectile_obj)
+void player::handle_input()
 {
     // player movement
     _direction.set_x(0);
@@ -79,10 +79,14 @@ void player::handle_input(projectile* projectile_obj)
         _last_sprite_index = _new_sprite_index;
         _last_direction = _direction;
     }
+}
 
-    // check player shooting
-    if (bn::keypad::a_pressed())
-    {
-        projectile_obj->set(_sprite_ptr.x(), _sprite_ptr.y(), _last_direction.x() * 3, _last_direction.y() * 3);
-    }
+bn::fixed_point player::position()
+{
+    return _sprite_ptr.position();
+}
+
+bn::fixed_point player::direction()
+{
+    return _last_direction;
 }

@@ -19,7 +19,9 @@ class player
 
 public:
 
-    void handle_input(projectile* projectile_obj);
+    void handle_input();
+    bn::fixed_point position();
+    bn::fixed_point direction();
 };
 
 #endif

@@ -4,18 +4,24 @@
 
 projectile::projectile()
 {
-    // _sprite_ptr.set_visible(false); TODO
+    _sprite_ptr.set_visible(false);
 }
 
-void projectile::set(bn::fixed x, bn::fixed y, bn::fixed dx, bn::fixed dy)
+void projectile::set(bn::fixed_point position, bn::fixed_point direction)
 {
-    _sprite_ptr.set_position(x, y);
-    _dx = dx;
-    _dy = dy;
+    _sprite_ptr.set_visible(true);
+    _sprite_ptr.set_position(position);
+    _direction = direction;
 }
 
 void projectile::update()
 {
-    _sprite_ptr.set_x(_sprite_ptr.x() + _dx);
-    _sprite_ptr.set_y(_sprite_ptr.y() + _dy);
+    if (!active())
+        return;
+    _sprite_ptr.set_position(_sprite_ptr.position() + _direction);
+}
+
+bool projectile::active()
+{
+    return _sprite_ptr.visible();
 }
