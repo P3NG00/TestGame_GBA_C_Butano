@@ -7,12 +7,12 @@
 
 #include "bn_sprite_items_player.h"
 
-Player::Player(bn::sprite_item player_sprite)
+player::player(bn::sprite_item player_sprite)
 {
     _player_sprite_ptr = new bn::sprite_ptr(player_sprite.create_sprite(0, 0));
 }
 
-void Player::handle_input()
+void player::handle_input()
 {
     // player movement
     _player_dx = 0;

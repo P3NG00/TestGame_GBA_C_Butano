@@ -26,7 +26,7 @@ int main()
     // initialize game assets
     text_generator.set_center_alignment();
     create_text(0, 0, "Hello, world!");
-    Player player(bn::sprite_items::player);
+    player player(bn::sprite_items::player);
 
     // game loop
     while(true)
