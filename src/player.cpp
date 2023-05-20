@@ -27,7 +27,10 @@ void Player::handle_input()
     _player_sprite_ptr->set_y(_player_sprite_ptr->y() + _player_dy);
 
     // find sprite index
-    if      (_player_dx ==  1 && _player_dy == -1)
+    _new_sprite_index = -1;
+    if      (_player_dx ==  0 && _player_dy == -1)
+        _new_sprite_index = 0;
+    else if (_player_dx ==  1 && _player_dy == -1)
         _new_sprite_index = 1;
     else if (_player_dx ==  1 && _player_dy ==  0)
         _new_sprite_index = 2;
@@ -41,11 +44,9 @@ void Player::handle_input()
         _new_sprite_index = 6;
     else if (_player_dx == -1 && _player_dy == -1)
         _new_sprite_index = 7;
-    else
-        _new_sprite_index = 0;
 
     // update sprite check
-    if (_new_sprite_index != _last_sprite_index)
+    if (_new_sprite_index != -1 && _new_sprite_index != _last_sprite_index)
     {
         _player_sprite_ptr->set_tiles(bn::sprite_items::player.tiles_item().create_tiles(_new_sprite_index));
         _last_sprite_index = _new_sprite_index;
