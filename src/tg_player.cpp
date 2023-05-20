@@ -56,6 +56,6 @@ void player::handle_input(projectile* projectile_obj)
     // check player shooting
     if (bn::keypad::a_pressed())
     {
-        projectile_obj->set(_sprite_ptr.x(), _sprite_ptr.y(), _dx, _dy);
+        projectile_obj->set(_sprite_ptr.x(), _sprite_ptr.y(), _dx * 3, _dy * 3);
     }
 }
