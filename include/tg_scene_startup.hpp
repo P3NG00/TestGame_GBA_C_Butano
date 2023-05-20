@@ -9,7 +9,7 @@
 
 class scene_startup
 {
-    bn::fixed _counter = seconds_to_frames(1);
+    bn::fixed _counter = seconds_to_frames(2);
     bn::regular_bg_ptr _bg_logo = bn::regular_bg_items::p3.create_bg(0, 0);
 
 public:
