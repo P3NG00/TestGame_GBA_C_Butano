@@ -6,11 +6,15 @@
 
 #include "bn_sprite_items_projectile.h"
 
+#include "tg_functions.hpp"
+
 class projectile
 {
     bn::sprite_ptr _sprite_ptr = bn::sprite_items::projectile.create_sprite(0, 0);
     bn::fixed_point _direction = bn::fixed_point(0, 0);
-    // TODO implement life value
+    bn::fixed _life;
+
+    void _set_active(bool active);
 
 public:
 

@@ -15,9 +15,11 @@ void scene_level_test::update()
         {
             if (create_projectile)
             {
-                _projectile_obj_array[i].set(_player_obj.position(), _player_obj.direction() * 3);
+                bn::fixed_point direction = _player_obj.direction() * 3;
+                _projectile_obj_array[i].set(_player_obj.position() + direction, direction);
                 create_projectile = false;
             }
+
             continue;
         }
 
