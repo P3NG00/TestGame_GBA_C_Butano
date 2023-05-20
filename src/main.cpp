@@ -1,28 +1,21 @@
 #include "bn_core.h"
 #include "bn_keypad.h"
-#include "bn_sprite_font.h"
 #include "bn_sprite_ptr.h"
 #include "bn_sprite_text_generator.h"
-#include "bn_sprite_tiles_ptr.h"
 #include "bn_string_view.h"
 #include "bn_vector.h"
 
 // include assets
+#include "player.hpp"
 #include "bn_sprite_items_player.h"
 #include "common_variable_8x16_sprite_font.h"
 
 // method declarations
-void handle_input();
 void create_text(int x, int y, bn::string_view str);
 
 // global variables
-bn::sprite_ptr* player_sprite_ptr;
 bn::sprite_text_generator text_generator = bn::sprite_text_generator(common::variable_8x16_sprite_font);
 bn::vector<bn::sprite_ptr, 16> text_sprites = bn::vector<bn::sprite_ptr, 16>();
-int player_dx = 0;
-int player_dy = 0;
-int last_sprite_index = 0;
-int new_sprite_index = 0;
 
 int main()
 {
@@ -33,60 +26,16 @@ int main()
     text_generator.set_center_alignment();
     create_text(0, 0, "Hello, world!");
     bn::sprite_ptr player_sprite = bn::sprite_items::player.create_sprite(0, 0);
-    player_sprite_ptr = &player_sprite;
+    Player player(&player_sprite);
 
     // game loop
     while(true)
     {
         // handle input
-        handle_input();
+        player.handle_input();
 
         // update butano last
         bn::core::update();
-    }
-}
-
-void handle_input()
-{
-    // player movement
-    player_dx = 0;
-    player_dy = 0;
-    if (bn::keypad::up_held())
-        player_dy--;
-    if (bn::keypad::down_held())
-        player_dy++;
-    if (bn::keypad::left_held())
-        player_dx--;
-    if (bn::keypad::right_held())
-        player_dx++;
-
-    // update position
-    player_sprite_ptr->set_x(player_sprite_ptr->x() + player_dx);
-    player_sprite_ptr->set_y(player_sprite_ptr->y() + player_dy);
-
-    // find sprite index
-    if      (player_dx ==  1 && player_dy == -1)
-        new_sprite_index = 1;
-    else if (player_dx ==  1 && player_dy ==  0)
-        new_sprite_index = 2;
-    else if (player_dx ==  1 && player_dy ==  1)
-        new_sprite_index = 3;
-    else if (player_dx ==  0 && player_dy ==  1)
-        new_sprite_index = 4;
-    else if (player_dx == -1 && player_dy ==  1)
-        new_sprite_index = 5;
-    else if (player_dx == -1 && player_dy ==  0)
-        new_sprite_index = 6;
-    else if (player_dx == -1 && player_dy == -1)
-        new_sprite_index = 7;
-    else
-        new_sprite_index = 0;
-
-    // update sprite check
-    if (new_sprite_index != last_sprite_index)
-    {
-        player_sprite_ptr->set_tiles(bn::sprite_items::player.tiles_item().create_tiles(new_sprite_index));
-        last_sprite_index = new_sprite_index;
     }
 }
 
