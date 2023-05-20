@@ -4,8 +4,9 @@
 
 void scene_startup::execute()
 {
-    while (--_counter > 0)
+    while (_counter > 0)
     {
+        _counter -= 1;
         bn::core::update();
     }
 }
