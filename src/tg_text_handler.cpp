@@ -1,7 +1,5 @@
 #include "bn_sprite_ptr.h"
 #include "bn_sprite_text_generator.h"
-#include "bn_string_view.h"
-#include "bn_vector.h"
 
 #include "tg_text_handler.hpp"
 

@@ -1,6 +1,7 @@
+#ifndef TG_TEXT_HANDLER_HPP
+#define TG_TEXT_HANDLER_HPP
+
 #include "bn_sprite_text_generator.h"
-#include "bn_string_view.h"
-#include "bn_vector.h"
 
 #include "common_variable_8x16_sprite_font.h"
 
@@ -15,3 +16,5 @@ public:
     void create_text(int x, int y, bn::string_view str);
     void clear_texts();
 };
+
+#endif

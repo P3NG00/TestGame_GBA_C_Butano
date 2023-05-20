@@ -1,15 +1,23 @@
+#ifndef TG_PLAYER_HPP
+#define TG_PLAYER_HPP
+
 #include "bn_sprite_ptr.h"
+
+#include "bn_sprite_items_player.h"
+
+#include "tg_projectile.hpp"
 
 class player
 {
-    bn::sprite_ptr* _player_sprite_ptr;
-    int _player_dx = 0;
-    int _player_dy = 0;
+    bn::sprite_ptr _sprite_ptr = bn::sprite_items::player.create_sprite(0, 0);
+    int _dx = 0;
+    int _dy = 0;
     int _last_sprite_index = 0;
     int _new_sprite_index = 0;
 
 public:
 
-    player();
-    void handle_input();
+    void handle_input(projectile* projectile_obj);
 };
+
+#endif
