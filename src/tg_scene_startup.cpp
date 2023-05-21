@@ -15,7 +15,7 @@ void scene_startup::execute()
     _sprite_signature.set_blending_enabled(true);
 
     // run fade in from white
-    while (_counter > seconds_to_frames(4))
+    while (_counter > seconds_to_frames(4) && !bn::keypad::start_pressed())
     {
         _counter -= 1;
         fade_in_from_white.update();
@@ -23,7 +23,7 @@ void scene_startup::execute()
     }
 
     // stall for a bit
-    while (_counter > seconds_to_frames(2))
+    while (_counter > seconds_to_frames(2) && !bn::keypad::start_pressed())
     {
         _counter -= 1;
         bn::core::update();
@@ -36,7 +36,7 @@ void scene_startup::execute()
     _bg_logo.set_blending_enabled(false);
 
     // run signature fade out
-    while (_counter > seconds_to_frames(1))
+    while (_counter > seconds_to_frames(1) && !bn::keypad::start_pressed())
     {
         _counter -= 1;
         fade_out_signature.update();
@@ -50,7 +50,7 @@ void scene_startup::execute()
     _sprite_signature.set_visible(false);
 
     // run logo fade out
-    while (_counter > 0)
+    while (_counter > 0 && !bn::keypad::start_pressed())
     {
         _counter -= 1;
         fade_out_logo.update();
