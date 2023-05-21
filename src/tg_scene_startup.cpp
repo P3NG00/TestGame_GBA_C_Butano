@@ -53,9 +53,10 @@ void scene_startup::execute()
         bn::core::update();
     }
 
-    // setup logo fade out
+    // setup fade to white
     bn::blending::set_fade_alpha(0);
     fade_out.reset();
+    bn::blending::set_fade_color(bn::blending::fade_color_type::WHITE);
     bg_logo.set_blending_enabled(true);
     sprite_signature.set_visible(false);
 
@@ -66,6 +67,4 @@ void scene_startup::execute()
         fade_out.update();
         bn::core::update();
     }
-
-    bn::blending::set_fade_alpha(0);
 }

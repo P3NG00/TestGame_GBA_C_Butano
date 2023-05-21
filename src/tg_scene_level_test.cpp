@@ -17,8 +17,8 @@ void scene_level_test::execute()
     player player_obj = player();
 
     // handle fade in
+    bn::blending::set_fade_color(bn::blending::fade_color_type::WHITE);
     bn::blending::set_fade_alpha(1);
-    player_obj.sprite_ptr.set_blending_enabled(true);
     bn::blending_fade_alpha_to_action fade_in(seconds_to_frames(1), 0);
 
     while (!fade_in.done())
@@ -27,7 +27,7 @@ void scene_level_test::execute()
         bn::core::update();
     }
 
-    player_obj.sprite_ptr.set_blending_enabled(false);
+    bn::blending::set_fade_color(bn::blending::fade_color_type::BLACK);
 
     // loop
     while (true)
