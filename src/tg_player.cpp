@@ -77,7 +77,7 @@ void player::handle_input()
     {
         sprite_ptr.set_tiles(bn::sprite_items::player.tiles_item().create_tiles(_new_sprite_index));
         _last_sprite_index = _new_sprite_index;
-        _last_direction = _direction;
+        _facing = _direction;
     }
 }
 
@@ -88,5 +88,5 @@ bn::fixed_point player::position()
 
 bn::fixed_point player::direction()
 {
-    return _last_direction;
+    return _facing;
 }
