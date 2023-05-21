@@ -11,7 +11,7 @@
 
 class scene_startup
 {
-    bn::fixed _counter = seconds_to_frames(2);
+    bn::fixed _counter = seconds_to_frames(5);
     bn::regular_bg_ptr _bg_logo = bn::regular_bg_items::p3.create_bg(-16, -16);
     bn::sprite_ptr _sprite_signature = bn::sprite_items::signature.create_sprite(48, 48);
 

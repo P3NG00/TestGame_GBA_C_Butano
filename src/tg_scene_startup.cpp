@@ -7,19 +7,53 @@
 
 void scene_startup::execute()
 {
+    // setup fade in from white
+    bn::blending::set_fade_alpha(1);
+    bn::blending::set_fade_color(bn::blending::fade_color_type::WHITE);
+    bn::blending_fade_alpha_to_action fade_in_from_white(seconds_to_frames(1), 0);
     _bg_logo.set_blending_enabled(true);
-    bn::fixed time_fade = seconds_to_frames(1);
-    bn::blending_fade_alpha_to_action fade_in_action(seconds_to_frames(1), 1);
+    _sprite_signature.set_blending_enabled(true);
 
-    while (_counter > 0 && !bn::keypad::start_pressed())
+    // run fade in from white
+    while (_counter > seconds_to_frames(4))
     {
         _counter -= 1;
+        fade_in_from_white.update();
+        bn::core::update();
+    }
 
-        if (_counter < time_fade)
-        {
-            fade_in_action.update();
-        }
+    // stall for a bit
+    while (_counter > seconds_to_frames(2))
+    {
+        _counter -= 1;
+        bn::core::update();
+    }
 
+    // setup signature fade out
+    bn::blending::set_fade_alpha(0);
+    bn::blending::set_fade_color(bn::blending::fade_color_type::BLACK);
+    bn::blending_fade_alpha_to_action fade_out_signature(seconds_to_frames(1), 1);
+    _bg_logo.set_blending_enabled(false);
+
+    // run signature fade out
+    while (_counter > seconds_to_frames(1))
+    {
+        _counter -= 1;
+        fade_out_signature.update();
+        bn::core::update();
+    }
+
+    // setup logo fade out
+    bn::blending::set_fade_alpha(0);
+    bn::blending_fade_alpha_to_action fade_out_logo(seconds_to_frames(1), 1);
+    _bg_logo.set_blending_enabled(true);
+    _sprite_signature.set_visible(false);
+
+    // run logo fade out
+    while (_counter > 0)
+    {
+        _counter -= 1;
+        fade_out_logo.update();
         bn::core::update();
     }
 
