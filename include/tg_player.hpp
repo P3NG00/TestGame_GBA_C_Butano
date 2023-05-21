@@ -10,7 +10,6 @@
 
 class player
 {
-    bn::sprite_ptr _sprite_ptr = bn::sprite_items::player.create_sprite(0, 0);
     bn::fixed_point _direction = bn::fixed_point(0, 0);
     // initialized y to -1 to handle the player facing up at the start
     bn::fixed_point _last_direction = bn::fixed_point(0, -1);
@@ -18,6 +17,8 @@ class player
     int _new_sprite_index = 0;
 
 public:
+
+    bn::sprite_ptr sprite_ptr = bn::sprite_items::player.create_sprite(0, 0);
 
     void handle_input();
     bn::fixed_point position();

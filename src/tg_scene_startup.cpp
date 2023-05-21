@@ -57,5 +57,5 @@ void scene_startup::execute()
         bn::core::update();
     }
 
-    bn::blending::set_fade_alpha(0);
+    // don't update bn::blending::set_fade_alpha(0) here, from where it left off will be used in the next scene
 }

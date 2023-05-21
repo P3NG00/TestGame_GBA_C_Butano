@@ -2,8 +2,20 @@
 
 #include "tg_scene_level_test.hpp"
 
+scene_level_test::scene_level_test()
+{
+    _player_obj.sprite_ptr.set_blending_enabled(true);
+}
+
 void scene_level_test::update()
 {
+    // handle fade in
+    if (!_fade_in.done())
+    {
+        _fade_in.update();
+        return;
+    }
+
     _player_obj.handle_input();
 
     // check player shooting
