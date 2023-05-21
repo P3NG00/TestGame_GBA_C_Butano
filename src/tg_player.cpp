@@ -86,7 +86,12 @@ bn::fixed_point player::position()
     return sprite_ptr.position();
 }
 
-bn::fixed_point player::direction()
+bn::fixed_point player::direction_moving()
+{
+    return _direction;
+}
+
+bn::fixed_point player::direction_facing()
 {
     return _facing;
 }

@@ -22,7 +22,8 @@ public:
 
     void handle_input();
     bn::fixed_point position();
-    bn::fixed_point direction();
+    bn::fixed_point direction_moving();
+    bn::fixed_point direction_facing();
 };
 
 #endif

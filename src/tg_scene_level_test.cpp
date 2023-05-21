@@ -1,6 +1,7 @@
 #include "bn_affine_bg_ptr.h"
 #include "bn_blending.h"
 #include "bn_blending_actions.h"
+#include "bn_camera_ptr.h"
 #include "bn_core.h"
 #include "bn_keypad.h"
 
@@ -17,13 +18,19 @@
 void scene_level_test::execute()
 {
     unsigned int i;
+    bn::camera_ptr camera_obj = bn::camera_ptr::create(0, 0);
     bn::affine_bg_ptr bg_obj_array[] = {
         bn::affine_bg_items::bg_1.create_bg(0, 0),
         bn::affine_bg_items::bg_2.create_bg(0, 0),
     };
+    for (i = 0; i < sizeof(bg_obj_array) / sizeof(bg_obj_array[0]); i++)
+        bg_obj_array[i].set_camera(camera_obj);
     projectile projectile_obj_array[PROJECTILE_AMOUNT];
+    for (i = 0; i < sizeof(projectile_obj_array) / sizeof(projectile_obj_array[0]); i++)
+        projectile_obj_array[i].sprite_ptr.set_camera(camera_obj);
     text_handler text_handler_obj = text_handler();
     player player_obj = player();
+    player_obj.sprite_ptr.set_camera(camera_obj);
 
     // setup fade in
     bn::blending::set_fade_color(bn::blending::fade_color_type::WHITE);
@@ -50,6 +57,8 @@ void scene_level_test::execute()
     // disable blending for all backgrounds other than first
     for (i = 1; i < sizeof(bg_obj_array) / sizeof(bg_obj_array[0]); i++)
         bg_obj_array[i].set_blending_enabled(false);
+
+    bn::fixed_point camera_offset;
 
     // loop
     while (true)
@@ -82,17 +91,22 @@ void scene_level_test::execute()
         // update projectiles
         for (i = 0; i < PROJECTILE_AMOUNT; i++)
         {
-            if (projectile_obj_array[i].active())
+            if (projectile_obj_array[i].sprite_ptr.visible())
             {
                 projectile_obj_array[i].update();
             }
             else if (create_projectile)
             {
-                bn::fixed_point direction = player_obj.direction() * 3;
+                bn::fixed_point direction = player_obj.direction_facing() * 3;
                 projectile_obj_array[i].set(player_obj.position() + direction, direction);
                 create_projectile = false;
             }
         }
+
+        // update camera
+        // TODO make camera movement not snappy, interpolate to new position
+        camera_offset = player_obj.direction_moving() * 40;
+        camera_obj.set_position(player_obj.position() + camera_offset);
 
         // update engine last
         bn::core::update();
