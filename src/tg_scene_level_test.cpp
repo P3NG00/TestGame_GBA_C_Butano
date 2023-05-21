@@ -1,7 +1,10 @@
+#include "bn_affine_bg_ptr.h"
 #include "bn_blending.h"
 #include "bn_blending_actions.h"
 #include "bn_core.h"
 #include "bn_keypad.h"
+
+#include "bn_affine_bg_items_bg.h"
 
 #include "tg_player.hpp"
 #include "tg_projectile.hpp"
@@ -12,6 +15,9 @@
 
 void scene_level_test::execute()
 {
+    bn::affine_bg_ptr bg_obj = bn::affine_bg_items::bg.create_bg(0, 0);
+    bg_obj.set_scale(2);
+    bg_obj.set_blending_enabled(true);
     projectile projectile_obj_array[PROJECTILE_AMOUNT];
     text_handler text_handler_obj = text_handler();
     player player_obj = player();
