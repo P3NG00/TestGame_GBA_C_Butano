@@ -1,4 +1,5 @@
 #include "bn_blending.h"
+#include "bn_blending_actions.h"
 #include "bn_core.h"
 #include "bn_keypad.h"
 
@@ -6,8 +7,9 @@
 
 void scene_startup::execute()
 {
-    bn::fixed time_fade = seconds_to_frames(1);
     _bg_logo.set_blending_enabled(true);
+    bn::fixed time_fade = seconds_to_frames(1);
+    bn::blending_fade_alpha_to_action fade_in_action(seconds_to_frames(1), 1);
 
     while (_counter > 0 && !bn::keypad::start_pressed())
     {
@@ -15,7 +17,7 @@ void scene_startup::execute()
 
         if (_counter < time_fade)
         {
-            bn::blending::set_fade_alpha(1 - (_counter / time_fade));
+            fade_in_action.update();
         }
 
         bn::core::update();

@@ -1,6 +1,8 @@
 #include "bn_fixed.h"
 
-bn::fixed seconds_to_frames(bn::fixed seconds)
+#define FRAMES_PER_SECOND 60
+
+int seconds_to_frames(bn::fixed seconds)
 {
-    return seconds * 60;
+    return (seconds * FRAMES_PER_SECOND).integer();
 }

@@ -3,6 +3,6 @@
 
 #include "bn_fixed.h"
 
-bn::fixed seconds_to_frames(bn::fixed seconds);
+int seconds_to_frames(bn::fixed seconds);
 
 #endif
