@@ -41,22 +41,16 @@ void scene_level_test::execute()
         // update projectiles
         for (int i = 0; i < PROJECTILE_AMOUNT; i++)
         {
-            // check active
-            if (!projectile_obj_array[i].active())
+            if (projectile_obj_array[i].active())
             {
-                // create projectile
-                if (create_projectile)
-                {
-                    bn::fixed_point direction = player_obj.direction() * 3;
-                    projectile_obj_array[i].set(player_obj.position() + direction, direction);
-                    create_projectile = false;
-                }
-
-                continue;
+                projectile_obj_array[i].update();
             }
-
-            // update projectile
-            projectile_obj_array[i].update();
+            else if (create_projectile)
+            {
+                bn::fixed_point direction = player_obj.direction() * 3;
+                projectile_obj_array[i].set(player_obj.position() + direction, direction);
+                create_projectile = false;
+            }
         }
 
         // update engine last
