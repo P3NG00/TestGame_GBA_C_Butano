@@ -17,6 +17,9 @@
 
 #define PROJECTILE_AMOUNT 8
 #define BACKGROUND_AMOUNT 2
+#define CAMERA_OFFSET_DISTANCE 20
+// used as 1 / CAMERA_OFFSET_DIV_LERP to smoothly move camera towards desired position
+#define CAMERA_OFFSET_DIV_LERP 20
 
 void scene_level_test::execute()
 {
@@ -114,8 +117,8 @@ void scene_level_test::execute()
         }
 
         // update camera
-        camera_offset = player_obj.direction_moving() * 40;
-        camera_offset = last_camera_offset + ((camera_offset - last_camera_offset) / 10);
+        camera_offset = player_obj.direction_moving() * CAMERA_OFFSET_DISTANCE;
+        camera_offset = last_camera_offset + ((camera_offset - last_camera_offset) / CAMERA_OFFSET_DIV_LERP);
         // update last true camera offset before rounding it just for this frame
         last_camera_offset = camera_offset;
         // round camera offset if player is not moving on an axis to avoid bumpiness
