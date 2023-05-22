@@ -12,6 +12,7 @@
 #include "bn_sprite_items_target.h"
 
 #include "tg_constants.hpp"
+#include "tg_enemy.hpp"
 #include "tg_functions.hpp"
 #include "tg_player.hpp"
 #include "tg_projectile.hpp"
@@ -20,6 +21,7 @@
 
 #define PROJECTILE_AMOUNT 8
 #define BACKGROUND_AMOUNT 2
+#define ENEMY_AMOUNT 8
 #define CAMERA_OFFSET_DISTANCE 20
 // used as 1 / CAMERA_OFFSET_DIV_LERP to smoothly move camera towards desired position
 #define CAMERA_OFFSET_DIV_LERP 20
@@ -35,6 +37,7 @@ void scene_level_test::execute()
     bn::camera_ptr camera_obj = bn::camera_ptr::create(0, 0);
     bn::camera_ptr camera_half_obj = bn::camera_ptr::create(0, 0);
     bn::array<projectile, PROJECTILE_AMOUNT> projectile_obj_array;
+    bn::array<enemy, ENEMY_AMOUNT> enemy_obj_array; // TODO implement collision
     bn::array<bn::affine_bg_ptr, BACKGROUND_AMOUNT> bg_obj_array = {
         bn::affine_bg_items::bg_1.create_bg(0, 0),
         bn::affine_bg_items::bg_2.create_bg(0, 0)
@@ -61,6 +64,9 @@ void scene_level_test::execute()
     // set camera for projectiles
     for (i = 0; i < PROJECTILE_AMOUNT; i++)
         projectile_obj_array[i].sprite.set_camera(camera_obj);
+    // set camera for enemies
+    for (i = 0; i < ENEMY_AMOUNT; i++)
+        enemy_obj_array[i].sprite.set_camera(camera_obj);
 
     // setup fade in
     bn::blending::set_fade_color(bn::blending::fade_color_type::WHITE);
@@ -113,21 +119,33 @@ void scene_level_test::execute()
         // handle player input
         player_obj.handle_input();
 
+        // spawn enemy
+        // TODO handle enemy random spawning
+        bool spawn_enemy = bn::keypad::select_pressed();
+        for (i = 0; i < ENEMY_AMOUNT; i++)
+        {
+            if (enemy_obj_array[i].sprite.visible())
+                enemy_obj_array[i].update(player_obj.position());
+            else if (spawn_enemy)
+            {
+                enemy_obj_array[i].set(player_obj.position());
+                spawn_enemy = false;
+            }
+        }
+
         // check player shooting
-        bool create_projectile = bn::keypad::r_pressed();
+        bool shoot_projectile = bn::keypad::r_pressed();
 
         // update projectiles
         for (i = 0; i < PROJECTILE_AMOUNT; i++)
         {
             if (projectile_obj_array[i].sprite.visible())
-            {
                 projectile_obj_array[i].update();
-            }
-            else if (create_projectile)
+            else if (shoot_projectile)
             {
                 bn::fixed_point direction = player_obj.direction_facing() * 3;
                 projectile_obj_array[i].set(player_obj.position() + direction, direction);
-                create_projectile = false;
+                shoot_projectile = false;
             }
         }
 

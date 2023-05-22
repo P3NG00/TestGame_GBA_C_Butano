@@ -7,5 +7,6 @@
 bool is_axis(bn::fixed_point point);
 int seconds_to_frames(bn::fixed seconds);
 int get_sprite_index(bn::fixed_point direction);
+bn::fixed distance(bn::fixed_point point1, bn::fixed_point point2);
 
 #endif
