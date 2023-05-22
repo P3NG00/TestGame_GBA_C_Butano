@@ -99,7 +99,7 @@ void scene_level_test::execute()
         player_obj.handle_input();
 
         // check player shooting
-        bool create_projectile = bn::keypad::a_pressed();
+        bool create_projectile = bn::keypad::r_pressed();
 
         // update projectiles
         for (i = 0; i < PROJECTILE_AMOUNT; i++)

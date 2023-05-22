@@ -31,6 +31,7 @@ void player::handle_input()
     // normalize direction if not on axis
     if (!is_axis(_direction))
     {
+        // TODO check keypad::b_held() to add speed boost
         _direction.set_x(_direction.x() * NORMALIZED);
         _direction.set_y(_direction.y() * NORMALIZED);
     }
