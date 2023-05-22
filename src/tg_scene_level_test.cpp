@@ -9,6 +9,7 @@
 #include "bn_affine_bg_items_bg_1.h"
 #include "bn_affine_bg_items_bg_2.h"
 
+#include "tg_functions.hpp"
 #include "tg_player.hpp"
 #include "tg_projectile.hpp"
 #include "tg_scene_level_test.hpp"
@@ -109,13 +110,16 @@ void scene_level_test::execute()
         // update camera
         camera_offset = player_obj.direction_moving() * 40;
         camera_offset = last_camera_offset + ((camera_offset - last_camera_offset) / 10);
-        if (player_obj.direction_moving().x() * player_obj.direction_moving().y() != 0)
+        // update last true camera offset before rounding it just for this frame
+        last_camera_offset = camera_offset;
+        // round camera offset if player is not moving on an axis to avoid bumpiness
+        if (!is_axis(player_obj.direction_moving()))
         {
             camera_offset.set_x(camera_offset.x().round_integer());
             camera_offset.set_y(camera_offset.y().round_integer());
         }
+        // update camera position
         camera_obj.set_position(player_obj.position() + camera_offset);
-        last_camera_offset = camera_offset;
 
         // update engine last
         bn::core::update();
