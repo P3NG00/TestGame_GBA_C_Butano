@@ -106,6 +106,8 @@ void scene_level_test::execute()
         // update camera
         // TODO make camera movement not snappy, interpolate to new position
         camera_offset = player_obj.direction_moving() * 40;
+        camera_offset.set_x(camera_offset.x().round_integer());
+        camera_offset.set_y(camera_offset.y().round_integer());
         camera_obj.set_position(player_obj.position() + camera_offset);
 
         // update engine last
