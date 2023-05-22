@@ -20,20 +20,27 @@
 
 void scene_level_test::execute()
 {
+    // setup variables
     unsigned int i;
+    unsigned short int bg_index = 0;
     bn::fixed_point camera_offset;
     bn::fixed_point last_camera_offset;
     bn::camera_ptr camera_obj = bn::camera_ptr::create(0, 0);
+    bn::array<projectile, PROJECTILE_AMOUNT> projectile_obj_array;
     bn::array<bn::affine_bg_ptr, BACKGROUND_AMOUNT> bg_obj_array = {
         bn::affine_bg_items::bg_1.create_bg(0, 0),
-        bn::affine_bg_items::bg_2.create_bg(0, 0),
+        bn::affine_bg_items::bg_2.create_bg(0, 0)
     };
-    bn::array<projectile, PROJECTILE_AMOUNT> projectile_obj_array;
-    for (i = 0; i < PROJECTILE_AMOUNT; i++)
-        projectile_obj_array[i].sprite_ptr.set_camera(camera_obj);
     text_handler text_handler_obj = text_handler();
     player player_obj = player();
     player_obj.sprite_ptr.set_camera(camera_obj);
+
+    // increase scale of every other background
+    for (i = 1; i < BACKGROUND_AMOUNT; i += 2)
+        bg_obj_array[i].set_scale(2);
+    // set camera for projectiles
+    for (i = 0; i < PROJECTILE_AMOUNT; i++)
+        projectile_obj_array[i].sprite_ptr.set_camera(camera_obj);
 
     // setup fade in
     bn::blending::set_fade_color(bn::blending::fade_color_type::WHITE);
@@ -54,11 +61,10 @@ void scene_level_test::execute()
 
     // setup background fading
     bn::blending::set_fade_color(bn::blending::fade_color_type::BLACK);
-    unsigned short int bg_index = 0;
     bn::blending_fade_alpha_to_action fade_out(seconds_to_frames(3), 1);
     // change fade alpha temporarily to setup fade in action
     bn::blending::set_fade_alpha(1);
-    fade_in = bn::blending_fade_alpha_to_action(seconds_to_frames(3), 0);
+    fade_in = bn::blending_fade_alpha_to_action(seconds_to_frames(1.5), 0);
     bn::blending::set_fade_alpha(0);
     // disable blending for all backgrounds other than first
     for (i = 1; i < BACKGROUND_AMOUNT; i++)
