@@ -1,4 +1,5 @@
 #include "bn_affine_bg_ptr.h"
+#include "bn_array.h"
 #include "bn_blending.h"
 #include "bn_blending_actions.h"
 #include "bn_camera_ptr.h"
@@ -14,19 +15,18 @@
 #include "tg_text_handler.hpp"
 
 #define PROJECTILE_AMOUNT 8
+#define BACKGROUND_AMOUNT 2
 
 void scene_level_test::execute()
 {
     unsigned int i;
     bn::camera_ptr camera_obj = bn::camera_ptr::create(0, 0);
-    bn::affine_bg_ptr bg_obj_array[] = {
+    bn::array<bn::affine_bg_ptr, BACKGROUND_AMOUNT> bg_obj_array = {
         bn::affine_bg_items::bg_1.create_bg(0, 0),
         bn::affine_bg_items::bg_2.create_bg(0, 0),
     };
-    for (i = 0; i < sizeof(bg_obj_array) / sizeof(bg_obj_array[0]); i++)
-        bg_obj_array[i].set_camera(camera_obj);
-    projectile projectile_obj_array[PROJECTILE_AMOUNT];
-    for (i = 0; i < sizeof(projectile_obj_array) / sizeof(projectile_obj_array[0]); i++)
+    bn::array<projectile, PROJECTILE_AMOUNT> projectile_obj_array;
+    for (i = 0; i < PROJECTILE_AMOUNT; i++)
         projectile_obj_array[i].sprite_ptr.set_camera(camera_obj);
     text_handler text_handler_obj = text_handler();
     player player_obj = player();
@@ -36,8 +36,11 @@ void scene_level_test::execute()
     bn::blending::set_fade_color(bn::blending::fade_color_type::WHITE);
     bn::blending::set_fade_alpha(1);
     bn::blending_fade_alpha_to_action fade_in(seconds_to_frames(1), 0);
-    for (i = 0; i < sizeof(bg_obj_array) / sizeof(bg_obj_array[0]); i++)
+    for (i = 0; i < BACKGROUND_AMOUNT; i++)
+    {
+        bg_obj_array[i].set_camera(camera_obj);
         bg_obj_array[i].set_blending_enabled(true);
+    }
 
     // handle fade in
     while (!fade_in.done())
@@ -55,7 +58,7 @@ void scene_level_test::execute()
     fade_in = bn::blending_fade_alpha_to_action(seconds_to_frames(3), 0);
     bn::blending::set_fade_alpha(0);
     // disable blending for all backgrounds other than first
-    for (i = 1; i < sizeof(bg_obj_array) / sizeof(bg_obj_array[0]); i++)
+    for (i = 1; i < BACKGROUND_AMOUNT; i++)
         bg_obj_array[i].set_blending_enabled(false);
 
     bn::fixed_point camera_offset;
