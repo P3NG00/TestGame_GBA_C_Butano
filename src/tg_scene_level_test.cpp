@@ -5,10 +5,13 @@
 #include "bn_camera_ptr.h"
 #include "bn_core.h"
 #include "bn_keypad.h"
+#include "bn_sprite_ptr.h"
 
 #include "bn_affine_bg_items_bg_1.h"
 #include "bn_affine_bg_items_bg_2.h"
+#include "bn_sprite_items_target.h"
 
+#include "tg_constants.hpp"
 #include "tg_functions.hpp"
 #include "tg_player.hpp"
 #include "tg_projectile.hpp"
@@ -20,6 +23,7 @@
 #define CAMERA_OFFSET_DISTANCE 20
 // used as 1 / CAMERA_OFFSET_DIV_LERP to smoothly move camera towards desired position
 #define CAMERA_OFFSET_DIV_LERP 20
+#define TARGET_DISTANCE 40
 
 void scene_level_test::execute()
 {
@@ -37,10 +41,13 @@ void scene_level_test::execute()
     text_handler text_handler_obj = text_handler();
     player player_obj = player();
     player_obj.sprite.set_camera(camera_obj);
+    bn::sprite_ptr target_sprite = bn::sprite_items::target.create_sprite(0, 0);
+    target_sprite.set_camera(camera_obj);
+    target_sprite.set_visible(false);
 
     // increase scale of every other background
     for (i = 1; i < BACKGROUND_AMOUNT; i += 2)
-        bg_obj_array[i].set_scale(2);
+        bg_obj_array[i].set_scale(2); // TODO attach every other background to camera that moves at half the speed
     // set camera for projectiles
     for (i = 0; i < PROJECTILE_AMOUNT; i++)
         projectile_obj_array[i].sprite.set_camera(camera_obj);
@@ -72,6 +79,9 @@ void scene_level_test::execute()
     // disable blending for all backgrounds other than first
     for (i = 1; i < BACKGROUND_AMOUNT; i++)
         bg_obj_array[i].set_blending_enabled(false);
+
+    // enable target sprite
+    target_sprite.set_visible(true);
 
     // loop
     while (true)
@@ -129,6 +139,10 @@ void scene_level_test::execute()
         }
         // update camera position
         camera_obj.set_position(player_obj.position() + camera_offset);
+
+        // update target sprite position
+        // TODO avoid bumpiness when not moving on axis
+        target_sprite.set_position(player_obj.position() + (player_obj.direction_facing() * TARGET_DISTANCE));
 
         // update engine last
         bn::core::update();

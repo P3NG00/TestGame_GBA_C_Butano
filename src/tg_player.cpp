@@ -5,10 +5,9 @@
 
 #include "bn_sprite_items_player.h"
 
+#include "tg_constants.hpp"
 #include "tg_functions.hpp"
 #include "tg_player.hpp"
-
-#define NORMALIZED bn::fixed(0.7071)
 
 void player::handle_input()
 {
