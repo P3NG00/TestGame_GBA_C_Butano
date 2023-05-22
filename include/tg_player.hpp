@@ -6,8 +6,6 @@
 
 #include "bn_sprite_items_player.h"
 
-#include "tg_projectile.hpp"
-
 class player
 {
     bn::fixed_point _direction = bn::fixed_point(0, 0);
@@ -18,7 +16,7 @@ class player
 
 public:
 
-    bn::sprite_ptr sprite_ptr = bn::sprite_items::player.create_sprite(0, 0);
+    bn::sprite_ptr sprite = bn::sprite_items::player.create_sprite(0, 0);
 
     void handle_input();
     bn::fixed_point position();

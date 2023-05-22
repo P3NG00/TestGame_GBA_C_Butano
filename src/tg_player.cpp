@@ -7,7 +7,6 @@
 
 #include "tg_functions.hpp"
 #include "tg_player.hpp"
-#include "tg_projectile.hpp"
 
 #define NORMALIZED bn::fixed(0.7071)
 
@@ -39,14 +38,14 @@ void player::handle_input()
     // update position
     if (!bn::keypad::l_held())
     {
-        sprite_ptr.set_x(sprite_ptr.x() + _direction.x());
-        sprite_ptr.set_y(sprite_ptr.y() + _direction.y());
+        sprite.set_x(sprite.x() + _direction.x());
+        sprite.set_y(sprite.y() + _direction.y());
     }
 
     // update sprite check
     if (_new_sprite_index != -1 && _new_sprite_index != _last_sprite_index)
     {
-        sprite_ptr.set_tiles(bn::sprite_items::player.tiles_item().create_tiles(_new_sprite_index));
+        sprite.set_tiles(bn::sprite_items::player.tiles_item().create_tiles(_new_sprite_index));
         _last_sprite_index = _new_sprite_index;
         _facing = _direction;
     }
@@ -54,7 +53,7 @@ void player::handle_input()
 
 bn::fixed_point player::position()
 {
-    return sprite_ptr.position();
+    return sprite.position();
 }
 
 bn::fixed_point player::direction_moving()

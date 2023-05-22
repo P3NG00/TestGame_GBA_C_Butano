@@ -15,7 +15,7 @@ class projectile
 
 public:
 
-    bn::sprite_ptr sprite_ptr = bn::sprite_items::projectile.create_sprite(0, 0);
+    bn::sprite_ptr sprite = bn::sprite_items::projectile.create_sprite(0, 0);
 
     projectile();
     void set(bn::fixed_point position, bn::fixed_point direction);
