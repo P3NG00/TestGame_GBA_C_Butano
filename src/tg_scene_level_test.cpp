@@ -48,6 +48,8 @@ void scene_level_test::execute()
     bn::sprite_ptr target_sprite = bn::sprite_items::target.create_sprite(0, 0);
     target_sprite.set_camera(camera_obj);
     target_sprite.set_visible(false);
+    bool spawn_enemy;
+    bool shoot_projectile;
 
     // increase scale of every other background
     for (i = 0; i < BACKGROUND_AMOUNT; i++)
@@ -121,7 +123,7 @@ void scene_level_test::execute()
 
         // spawn enemy
         // TODO handle enemy random spawning
-        bool spawn_enemy = bn::keypad::select_pressed();
+        spawn_enemy = bn::keypad::select_pressed();
         for (i = 0; i < ENEMY_AMOUNT; i++)
         {
             if (enemy_obj_array[i].sprite.visible())
@@ -134,7 +136,7 @@ void scene_level_test::execute()
         }
 
         // check player shooting
-        bool shoot_projectile = bn::keypad::r_pressed();
+        shoot_projectile = bn::keypad::r_pressed();
 
         // update projectiles
         for (i = 0; i < PROJECTILE_AMOUNT; i++)
