@@ -30,7 +30,7 @@ void scene_level_test::execute()
     bn::fixed_point last_camera_offset;
     bn::camera_ptr camera_obj = bn::camera_ptr::create(0, 0);
     bn::array<projectile, PROJECTILE_AMOUNT> projectile_obj_array;
-    bn::array<bn::affine_bg_ptr, BACKGROUND_AMOUNT> bg_obj_array = { // TODO increase brightness of backgrounds to 23
+    bn::array<bn::affine_bg_ptr, BACKGROUND_AMOUNT> bg_obj_array = {
         bn::affine_bg_items::bg_1.create_bg(0, 0),
         bn::affine_bg_items::bg_2.create_bg(0, 0)
     };
