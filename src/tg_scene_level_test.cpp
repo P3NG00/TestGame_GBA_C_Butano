@@ -20,6 +20,8 @@
 void scene_level_test::execute()
 {
     unsigned int i;
+    bn::fixed_point camera_offset;
+    bn::fixed_point last_camera_offset;
     bn::camera_ptr camera_obj = bn::camera_ptr::create(0, 0);
     bn::array<bn::affine_bg_ptr, BACKGROUND_AMOUNT> bg_obj_array = {
         bn::affine_bg_items::bg_1.create_bg(0, 0),
@@ -60,8 +62,6 @@ void scene_level_test::execute()
     // disable blending for all backgrounds other than first
     for (i = 1; i < BACKGROUND_AMOUNT; i++)
         bg_obj_array[i].set_blending_enabled(false);
-
-    bn::fixed_point camera_offset;
 
     // loop
     while (true)
@@ -107,11 +107,15 @@ void scene_level_test::execute()
         }
 
         // update camera
-        // TODO make camera movement not snappy, interpolate to new position
         camera_offset = player_obj.direction_moving() * 40;
-        camera_offset.set_x(camera_offset.x().round_integer());
-        camera_offset.set_y(camera_offset.y().round_integer());
+        camera_offset = last_camera_offset + ((camera_offset - last_camera_offset) / 10);
+        if (player_obj.direction_moving().x() * player_obj.direction_moving().y() != 0)
+        {
+            camera_offset.set_x(camera_offset.x().round_integer());
+            camera_offset.set_y(camera_offset.y().round_integer());
+        }
         camera_obj.set_position(player_obj.position() + camera_offset);
+        last_camera_offset = camera_offset;
 
         // update engine last
         bn::core::update();
