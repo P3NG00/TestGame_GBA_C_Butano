@@ -33,6 +33,7 @@ void scene_level_test::execute()
     bn::fixed_point camera_offset;
     bn::fixed_point last_camera_offset;
     bn::camera_ptr camera_obj = bn::camera_ptr::create(0, 0);
+    bn::camera_ptr camera_half_obj = bn::camera_ptr::create(0, 0);
     bn::array<projectile, PROJECTILE_AMOUNT> projectile_obj_array;
     bn::array<bn::affine_bg_ptr, BACKGROUND_AMOUNT> bg_obj_array = {
         bn::affine_bg_items::bg_1.create_bg(0, 0),
@@ -46,8 +47,17 @@ void scene_level_test::execute()
     target_sprite.set_visible(false);
 
     // increase scale of every other background
-    for (i = 1; i < BACKGROUND_AMOUNT; i += 2)
-        bg_obj_array[i].set_scale(2); // TODO attach every other background to camera that moves at half the speed
+    for (i = 0; i < BACKGROUND_AMOUNT; i++)
+    {
+        bg_obj_array[i].set_blending_enabled(true);
+        if (i % 2 == 0)
+            bg_obj_array[i].set_camera(camera_half_obj);
+        else
+        {
+            bg_obj_array[i].set_camera(camera_obj);
+            bg_obj_array[i].set_scale(2);
+        }
+    }
     // set camera for projectiles
     for (i = 0; i < PROJECTILE_AMOUNT; i++)
         projectile_obj_array[i].sprite.set_camera(camera_obj);
@@ -56,11 +66,6 @@ void scene_level_test::execute()
     bn::blending::set_fade_color(bn::blending::fade_color_type::WHITE);
     bn::blending::set_fade_alpha(1);
     bn::blending_fade_alpha_to_action fade_in(seconds_to_frames(1), 0);
-    for (i = 0; i < BACKGROUND_AMOUNT; i++)
-    {
-        bg_obj_array[i].set_camera(camera_obj);
-        bg_obj_array[i].set_blending_enabled(true);
-    }
 
     // handle fade in
     while (!fade_in.done())
@@ -139,6 +144,7 @@ void scene_level_test::execute()
         }
         // update camera position
         camera_obj.set_position(player_obj.position() + camera_offset);
+        camera_half_obj.set_position(camera_obj.position() / 2);
 
         // update target sprite position
         // TODO avoid bumpiness when not moving on axis
