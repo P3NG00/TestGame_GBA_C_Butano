@@ -44,3 +44,9 @@ bn::fixed distance(bn::fixed_point point1, bn::fixed_point point2)
     bn::fixed y = point1.y() - point2.y();
     return bn::sqrt((x * x) + (y * y));
 }
+
+bn::fixed_point normalize(bn::fixed_point point)
+{
+    bn::fixed magnitude = distance(bn::fixed_point(0, 0), point);
+    return magnitude == 0 ? bn::fixed_point(0, 0) : point / magnitude;
+}
