@@ -85,10 +85,12 @@ void scene_level_test::execute()
 
     // setup background fading
     bn::blending::set_fade_color(bn::blending::fade_color_type::BLACK);
-    bn::blending_fade_alpha_to_action fade_out(seconds_to_frames(3), 1);
-    // change fade alpha temporarily to setup fade in action
-    bn::blending::set_fade_alpha(1);
-    fade_in = bn::blending_fade_alpha_to_action(seconds_to_frames(1.5), 0);
+    // change fade alpha temporarily to setup fade actions
+    bn::blending::set_fade_alpha(0);
+    bn::blending_fade_alpha_to_action fade_out(seconds_to_frames(3), 0.8);
+    bn::blending::set_fade_alpha(0.8);
+    fade_in = bn::blending_fade_alpha_to_action(seconds_to_frames(1), 0);
+    // reset fade alpha
     bn::blending::set_fade_alpha(0);
     // disable blending for all backgrounds other than first
     for (i = 1; i < BACKGROUND_AMOUNT; i++)
