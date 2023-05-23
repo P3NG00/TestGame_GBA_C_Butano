@@ -25,6 +25,8 @@
 #define CAMERA_OFFSET_DISTANCE 20
 // used as 1 / CAMERA_OFFSET_DIV_LERP to smoothly move camera towards desired position
 #define CAMERA_OFFSET_DIV_LERP 20
+// used as 1 / CAMERA_SLOW_RATE of regular speed
+#define CAMERA_SLOW_RATE 4
 #define TARGET_DISTANCE 60
 
 void scene_level_test::execute()
@@ -35,7 +37,7 @@ void scene_level_test::execute()
     bn::fixed_point camera_offset;
     bn::fixed_point last_camera_offset;
     bn::camera_ptr camera_obj = bn::camera_ptr::create(0, 0);
-    bn::camera_ptr camera_half_obj = bn::camera_ptr::create(0, 0);
+    bn::camera_ptr camera_slow_obj = bn::camera_ptr::create(0, 0);
     bn::array<projectile, PROJECTILE_AMOUNT> projectile_obj_array;
     bn::array<enemy, ENEMY_AMOUNT> enemy_obj_array; // TODO implement collision
     bn::array<bn::affine_bg_ptr, BACKGROUND_AMOUNT> bg_obj_array = {
@@ -56,7 +58,7 @@ void scene_level_test::execute()
     {
         bg_obj_array[i].set_blending_enabled(true);
         if (i % 2 == 0)
-            bg_obj_array[i].set_camera(camera_half_obj);
+            bg_obj_array[i].set_camera(camera_slow_obj);
         else
         {
             bg_obj_array[i].set_camera(camera_obj);
@@ -162,7 +164,7 @@ void scene_level_test::execute()
         camera_offset.set_y(camera_offset.y().round_integer());
         // update camera position
         camera_obj.set_position(player_obj.position() + camera_offset);
-        camera_half_obj.set_position(camera_obj.position() / 2);
+        camera_slow_obj.set_position(camera_obj.position() / CAMERA_SLOW_RATE);
 
         // update target sprite position
         target_sprite.set_x(player_obj.position().x() + (player_obj.direction_facing().x() * TARGET_DISTANCE).round_integer());
