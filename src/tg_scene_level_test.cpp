@@ -1,14 +1,15 @@
-#include "bn_affine_bg_ptr.h"
 #include "bn_array.h"
 #include "bn_blending.h"
 #include "bn_blending_actions.h"
 #include "bn_camera_ptr.h"
 #include "bn_core.h"
 #include "bn_keypad.h"
+#include "bn_regular_bg_ptr.h"
 #include "bn_sprite_ptr.h"
 
-#include "bn_affine_bg_items_bg_1.h"
-#include "bn_affine_bg_items_bg_2.h"
+#include "bn_regular_bg_items_bg_1.h"
+#include "bn_regular_bg_items_bg_2.h"
+#include "bn_regular_bg_items_select_window.h"
 #include "bn_sprite_items_target.h"
 
 #include "tg_constants.hpp"
@@ -30,46 +31,40 @@
 void scene_level_test::execute()
 {
     // setup variables
-    unsigned int i;
-    unsigned short int bg_index = 0;
     bn::fixed_point camera_offset;
     bn::fixed_point last_camera_offset;
+    unsigned int i;
+    unsigned short int bg_index = 0;
+    bool spawn_enemy;
+    bool shoot_projectile;
+    // setup cameras
     bn::camera_ptr camera_obj = bn::camera_ptr::create(0, 0);
     bn::camera_ptr camera_bg_1 = bn::camera_ptr::create(0, 0);
     bn::camera_ptr camera_bg_2 = bn::camera_ptr::create(0, 0);
+    // setup objects
     bn::array<projectile, PROJECTILE_AMOUNT> projectile_obj_array;
+    for (i = 0; i < PROJECTILE_AMOUNT; i++)
+        projectile_obj_array[i].sprite.set_camera(camera_obj);
     bn::array<enemy, ENEMY_AMOUNT> enemy_obj_array; // TODO implement collision
-    bn::array<bn::affine_bg_ptr, BACKGROUND_AMOUNT> bg_obj_array = {
-        bn::affine_bg_items::bg_1.create_bg(0, 0),
-        bn::affine_bg_items::bg_2.create_bg(0, 0)
+    for (i = 0; i < ENEMY_AMOUNT; i++)
+        enemy_obj_array[i].sprite.set_camera(camera_obj);
+    // setup backgrounds
+    bn::array<bn::regular_bg_ptr, BACKGROUND_AMOUNT> bg_obj_array = {
+        bn::regular_bg_items::bg_1.create_bg(0, 0),
+        bn::regular_bg_items::bg_2.create_bg(0, 0)
     };
-    text_handler text_handler_obj = text_handler();
+    for (i = 0; i < BACKGROUND_AMOUNT; i++)
+        bg_obj_array[i].set_blending_enabled(true);
+    bg_obj_array[0].set_camera(camera_bg_2);
+    bg_obj_array[1].set_camera(camera_bg_1);
+    bn::regular_bg_ptr select_window = bn::regular_bg_items::select_window.create_bg(0, 0);
+    select_window.set_visible(false);
+    text_handler text_handler_obj = text_handler(); // TODO put text on screen to display score
     player player_obj = player();
     player_obj.sprite.set_camera(camera_obj);
     bn::sprite_ptr target_sprite = bn::sprite_items::target.create_sprite(0, 0);
     target_sprite.set_camera(camera_obj);
     target_sprite.set_visible(false);
-    bool spawn_enemy;
-    bool shoot_projectile;
-
-    // increase scale of every other background
-    for (i = 0; i < BACKGROUND_AMOUNT; i++)
-    {
-        bg_obj_array[i].set_blending_enabled(true);
-        if (i % 2 == 0)
-            bg_obj_array[i].set_camera(camera_bg_2);
-        else
-        {
-            bg_obj_array[i].set_camera(camera_bg_1);
-            bg_obj_array[i].set_scale(2);
-        }
-    }
-    // set camera for projectiles
-    for (i = 0; i < PROJECTILE_AMOUNT; i++)
-        projectile_obj_array[i].sprite.set_camera(camera_obj);
-    // set camera for enemies
-    for (i = 0; i < ENEMY_AMOUNT; i++)
-        enemy_obj_array[i].sprite.set_camera(camera_obj);
 
     // setup fade in
     bn::blending::set_fade_color(bn::blending::fade_color_type::WHITE);
@@ -87,15 +82,13 @@ void scene_level_test::execute()
     bn::blending::set_fade_color(bn::blending::fade_color_type::BLACK);
     // change fade alpha temporarily to setup fade actions
     bn::blending::set_fade_alpha(0);
-    bn::blending_fade_alpha_to_action fade_out(seconds_to_frames(3), 0.8);
-    bn::blending::set_fade_alpha(0.8);
+    bn::blending_fade_alpha_to_action fade_out(seconds_to_frames(3), 0.9);
+    bn::blending::set_fade_alpha(0.9);
     fade_in = bn::blending_fade_alpha_to_action(seconds_to_frames(1), 0);
     // reset fade alpha
     bn::blending::set_fade_alpha(0);
-    // disable blending for all backgrounds other than first
-    for (i = 1; i < BACKGROUND_AMOUNT; i++)
-        bg_obj_array[i].set_blending_enabled(false);
-
+    // disable blending for bg 2
+    bg_obj_array[1].set_blending_enabled(false);
     // enable target sprite
     target_sprite.set_visible(true);
 
@@ -124,9 +117,14 @@ void scene_level_test::execute()
         // handle player input
         player_obj.handle_input();
 
+        // update select window
+        // TODO add purchasable upgrades and move camera offset to allow space for window
+        if (bn::keypad::select_pressed())
+            select_window.set_visible(!select_window.visible());
+
         // spawn enemy
         // TODO handle enemy random spawning
-        spawn_enemy = bn::keypad::select_pressed();
+        spawn_enemy = false;
         for (i = 0; i < ENEMY_AMOUNT; i++)
         {
             if (enemy_obj_array[i].sprite.visible())
