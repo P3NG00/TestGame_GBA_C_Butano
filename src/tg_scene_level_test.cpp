@@ -46,8 +46,7 @@ void scene_level_test::execute()
     bool shoot_projectile;
     // setup cameras
     bn::camera_ptr camera_obj = bn::camera_ptr::create(0, 0);
-    bn::camera_ptr camera_bg_1 = bn::camera_ptr::create(0, 0);
-    bn::camera_ptr camera_bg_2 = bn::camera_ptr::create(0, 0);
+    bn::camera_ptr camera_bg = bn::camera_ptr::create(0, 0);
     // setup objects
     bn::array<projectile, PROJECTILE_AMOUNT> projectile_obj_array;
     for (i = 0; i < PROJECTILE_AMOUNT; i++)
@@ -62,8 +61,8 @@ void scene_level_test::execute()
     };
     for (i = 0; i < BACKGROUND_AMOUNT; i++)
         bg_obj_array[i].set_blending_enabled(true);
-    bg_obj_array[0].set_camera(camera_bg_2);
-    bg_obj_array[1].set_camera(camera_bg_1);
+    bg_obj_array[0].set_camera(camera_obj);
+    bg_obj_array[1].set_camera(camera_bg);
     bn::regular_bg_ptr select_window = bn::regular_bg_items::select_window.create_bg(0, 0);
     select_window.set_visible(false);
     player player_obj = player();
@@ -152,6 +151,7 @@ void scene_level_test::execute()
                 projectile_obj_array[i].update();
             else if (shoot_projectile)
             {
+                // TODO if holdling left shoulder, lock onto closest enemy direction
                 bn::fixed_point direction = player_obj.direction_facing() * 3;
                 projectile_obj_array[i].set(player_obj.position() + direction, direction);
                 shoot_projectile = false;
@@ -169,8 +169,7 @@ void scene_level_test::execute()
         camera_offset.set_y(camera_offset.y().round_integer());
         // update camera position
         camera_obj.set_position(player_obj.position() + camera_offset);
-        camera_bg_1.set_position(camera_obj.position() / 2);
-        camera_bg_2.set_position(camera_bg_1.position() / 2);
+        camera_bg.set_position(camera_obj.position() / 2);
 
         // update target sprite position
         target_sprite.set_x(player_obj.position().x() + (player_obj.direction_facing().x() * TARGET_DISTANCE).round_integer());
