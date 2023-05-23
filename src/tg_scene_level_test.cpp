@@ -3,14 +3,20 @@
 #include "bn_blending_actions.h"
 #include "bn_camera_ptr.h"
 #include "bn_core.h"
+#include "bn_fixed.h"
+#include "bn_fixed_point.h"
 #include "bn_keypad.h"
 #include "bn_regular_bg_ptr.h"
 #include "bn_sprite_ptr.h"
+#include "bn_sprite_text_generator.h"
+#include "bn_string.h"
+#include "bn_string_view.h"
 
 #include "bn_regular_bg_items_bg_1.h"
 #include "bn_regular_bg_items_bg_2.h"
 #include "bn_regular_bg_items_select_window.h"
 #include "bn_sprite_items_target.h"
+#include "common_variable_8x16_sprite_font.h"
 
 #include "tg_constants.hpp"
 #include "tg_enemy.hpp"
@@ -18,7 +24,6 @@
 #include "tg_player.hpp"
 #include "tg_projectile.hpp"
 #include "tg_scene_level_test.hpp"
-#include "tg_text_handler.hpp"
 
 #define PROJECTILE_AMOUNT 8
 #define BACKGROUND_AMOUNT 2
@@ -31,6 +36,8 @@
 void scene_level_test::execute()
 {
     // setup variables
+    bn::sprite_text_generator text_generator = bn::sprite_text_generator(common::variable_8x16_sprite_font);
+    bn::vector<bn::sprite_ptr, 16> text_sprites = bn::vector<bn::sprite_ptr, 16>();
     bn::fixed_point camera_offset;
     bn::fixed_point last_camera_offset;
     unsigned int i;
@@ -59,7 +66,6 @@ void scene_level_test::execute()
     bg_obj_array[1].set_camera(camera_bg_1);
     bn::regular_bg_ptr select_window = bn::regular_bg_items::select_window.create_bg(0, 0);
     select_window.set_visible(false);
-    text_handler text_handler_obj = text_handler(); // TODO put text on screen to display score
     player player_obj = player();
     player_obj.sprite.set_camera(camera_obj);
     bn::sprite_ptr target_sprite = bn::sprite_items::target.create_sprite(0, 0);
@@ -169,6 +175,11 @@ void scene_level_test::execute()
         // update target sprite position
         target_sprite.set_x(player_obj.position().x() + (player_obj.direction_facing().x() * TARGET_DISTANCE).round_integer());
         target_sprite.set_y(player_obj.position().y() + (player_obj.direction_facing().y() * TARGET_DISTANCE).round_integer());
+
+        // update text
+        text_sprites.clear();
+        text_generator.generate(-120, -76, "x: " + to_string<16>(player_obj.position().x()), text_sprites);
+        text_generator.generate(-120, -68, "y: " + to_string<16>(player_obj.position().y()), text_sprites);
 
         // update engine last
         bn::core::update();
