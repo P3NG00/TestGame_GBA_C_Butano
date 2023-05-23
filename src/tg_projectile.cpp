@@ -1,4 +1,5 @@
 #include "bn_fixed.h"
+#include "bn_fixed_point.h"
 
 #include "tg_projectile.hpp"
 
@@ -22,4 +23,9 @@ void projectile::update()
         sprite.set_position(sprite.position() + _direction);
     else
         sprite.set_visible(false);
+}
+
+bn::fixed_point projectile::position()
+{
+    return sprite.position();
 }

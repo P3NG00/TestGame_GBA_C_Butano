@@ -1,6 +1,7 @@
 #ifndef TG_ENEMY_HPP
 #define TG_ENEMY_HPP
 
+#include "bn_fixed.h"
 #include "bn_fixed_point.h"
 #include "bn_sprite_ptr.h"
 
@@ -21,6 +22,7 @@ public:
     enemy();
     void update(bn::fixed_point player_position);
     void set(bn::fixed_point position);
+    bn::fixed_point position();
 };
 
 #endif

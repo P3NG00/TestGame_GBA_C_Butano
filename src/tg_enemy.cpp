@@ -38,3 +38,8 @@ void enemy::set(bn::fixed_point position)
     sprite.set_position(position);
     sprite.set_visible(true);
 }
+
+bn::fixed_point enemy::position()
+{
+    return sprite.position();
+}

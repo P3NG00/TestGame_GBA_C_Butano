@@ -63,6 +63,7 @@ void scene_level_test::execute()
         bg_obj_array[i].set_blending_enabled(true);
     bg_obj_array[0].set_camera(camera_obj);
     bg_obj_array[1].set_camera(camera_bg);
+    // setup sprites
     bn::regular_bg_ptr select_window = bn::regular_bg_items::select_window.create_bg(0, 0);
     select_window.set_visible(false);
     player player_obj = player();
