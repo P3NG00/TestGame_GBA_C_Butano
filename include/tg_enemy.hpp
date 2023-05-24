@@ -4,6 +4,7 @@
 #include "bn_camera_ptr.h"
 #include "bn_fixed.h"
 #include "bn_fixed_point.h"
+#include "bn_math.h"
 #include "bn_sprite_ptr.h"
 #include "bn_sprite_tiles_ptr.h"
 

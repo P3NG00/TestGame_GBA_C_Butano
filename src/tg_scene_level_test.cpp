@@ -3,7 +3,7 @@
 #define PROJECTILE_AMOUNT 8
 #define BACKGROUND_AMOUNT 2
 #define WINDOW_WIDTH 84
-#define ENEMY_AMOUNT 8
+#define ENEMY_AMOUNT 32
 #define CAMERA_OFFSET_DISTANCE 20
 // used as 1 / CAMERA_OFFSET_DIV_LERP to smoothly move camera towards desired position
 #define CAMERA_OFFSET_DIV_LERP 20
@@ -139,6 +139,7 @@ void scene_level_test::execute()
         }
 
         // check player shooting
+        // TODO add cooldown to shots
         shoot_projectile = bn::keypad::r_pressed();
 
         // update projectiles

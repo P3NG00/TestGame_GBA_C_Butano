@@ -37,7 +37,7 @@ AUDIO       :=  audio ../../butano/common/audio
 DMGAUDIO    :=  dmg_audio ../../butano/common/dmg_audio
 ROMTITLE    :=  TEST GAME
 ROMCODE     :=  SBTP
-USERFLAGS   :=
+USERFLAGS   :=  -DBN_CFG_PROFILER_ENABLED=true
 USERASFLAGS :=
 USERLDFLAGS :=
 USERLIBDIRS :=
