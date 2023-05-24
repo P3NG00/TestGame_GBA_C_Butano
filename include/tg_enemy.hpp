@@ -18,6 +18,7 @@ class enemy : public entity_animated
 public:
     enemy();
     bn::fixed_point new_position();
+    bool collides_with(bn::fixed_point other_position, bn::fixed other_size);
     // called first to update enemy's new position
     void update(bn::fixed_point player_position);
     // called second to check collision using new position

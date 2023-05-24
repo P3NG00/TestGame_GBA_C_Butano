@@ -153,6 +153,26 @@ void scene_level_test::execute()
             }
         }
 
+        // check collision between enemies and projectiles
+        for (i = 0; i < ENEMY_AMOUNT; i++)
+        {
+            // check if enemy is active
+            if (!enemy_obj_array[i].active())
+                continue;
+            // check collision against projectiles
+            for (j = 0; j < PROJECTILE_AMOUNT; j++)
+            {
+                if (!projectile_obj_array[j].active())
+                    continue;
+                if (enemy_obj_array[i].collides_with(projectile_obj_array[j].position(), projectile_obj_array[j].size()))
+                {
+                    // TODO implement actual damage values
+                    enemy_obj_array[i].damage(0);
+                    projectile_obj_array[j].damage(0);
+                }
+            }
+        }
+
         // update select window
         // TODO add purchasable upgrades and move camera offset to allow space for window
         if (bn::keypad::select_pressed())

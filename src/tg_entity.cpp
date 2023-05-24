@@ -64,3 +64,9 @@ void entity::_set_active(bool active)
 {
     _sprite.set_visible(active);
 }
+
+void entity::damage(bn::fixed damage)
+{
+    // TODO implement damage decrementing _life value
+    _set_active(false);
+}

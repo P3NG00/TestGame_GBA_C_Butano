@@ -11,6 +11,16 @@ bn::fixed_point enemy::new_position()
     return _new_position;
 }
 
+bool enemy::collides_with(bn::fixed_point other_position, bn::fixed other_size)
+{
+    bn::fixed size_half = _size / 2;
+    bn::fixed other_size_half = other_size / 2;
+    return position().x() + size_half > other_position.x() - other_size_half &&
+           position().x() - size_half < other_position.x() + other_size_half &&
+           position().y() + size_half > other_position.y() - other_size_half &&
+           position().y() - size_half < other_position.y() + other_size_half;
+}
+
 void enemy::update(bn::fixed_point player_position)
 {
     // get direction
@@ -33,34 +43,28 @@ void enemy::update(bn::fixed_point player_position)
 // called after update() to check new position
 void enemy::handle_collision(bn::fixed_point other_position, bn::fixed other_size)
 {
-    if (distance(position(), other_position) > ENTITY_DISTANCE_CHECK)
+    if (distance(position(), other_position) > ENTITY_DISTANCE_CHECK || !collides_with(other_position, other_size))
         return;
     bn::fixed size_half = _size / 2;
     bn::fixed other_size_half = other_size / 2;
-    if (position().x() + size_half > other_position.x() - other_size_half &&
-        position().x() - size_half < other_position.x() + other_size_half &&
-        position().y() + size_half > other_position.y() - other_size_half &&
-        position().y() - size_half < other_position.y() + other_size_half)
+    // handle collision on per axis basis
+    bn::fixed x_diff = position().x() - other_position.x();
+    bn::fixed y_diff = position().y() - other_position.y();
+    if (abs(x_diff) > abs(y_diff))
     {
-        // handle collision on per axis basis
-        bn::fixed x_diff = position().x() - other_position.x();
-        bn::fixed y_diff = position().y() - other_position.y();
-        if (abs(x_diff) > abs(y_diff))
-        {
-            // x axis collision
-            if (x_diff > 0)
-                _new_position.set_x(other_position.x() + other_size_half + size_half);
-            else
-                _new_position.set_x(other_position.x() - other_size_half - size_half);
-        }
+        // x axis collision
+        if (x_diff > 0)
+            _new_position.set_x(other_position.x() + other_size_half + size_half);
         else
-        {
-            // y axis collision
-            if (y_diff > 0)
-                _new_position.set_y(other_position.y() + other_size_half + size_half);
-            else
-                _new_position.set_y(other_position.y() - other_size_half - size_half);
-        }
+            _new_position.set_x(other_position.x() - other_size_half - size_half);
+    }
+    else
+    {
+        // y axis collision
+        if (y_diff > 0)
+            _new_position.set_y(other_position.y() + other_size_half + size_half);
+        else
+            _new_position.set_y(other_position.y() - other_size_half - size_half);
     }
 }
 

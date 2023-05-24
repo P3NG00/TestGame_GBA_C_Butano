@@ -37,6 +37,7 @@ public:
     bn::fixed size();
     bool active();
     void set_camera(bn::camera_ptr camera_obj);
+    void damage(bn::fixed damage);
 };
 
 #endif
