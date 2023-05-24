@@ -22,7 +22,6 @@ void scene_level_test::execute()
     unsigned short int bg_index = 0;
     bool spawn_enemy;
     bool shoot_projectile;
-    bool first_check;
     // setup cameras
     bn::camera_ptr camera_obj = bn::camera_ptr::create(0, 0);
     bn::camera_ptr camera_bg = bn::camera_ptr::create(0, 0);
@@ -102,32 +101,31 @@ void scene_level_test::execute()
         // handle player input
         player_obj.update();
 
-        // update select window
-        // TODO add purchasable upgrades and move camera offset to allow space for window
-        if (bn::keypad::select_pressed())
-            select_window.set_visible(!select_window.visible());
-
         // update enemies
         spawn_enemy = bn::keypad::b_pressed(); // TODO make reliant on timer, not button press
-        first_check = true;
+        for (i = 0; i < ENEMY_AMOUNT; i++)
+        {
+            if (enemy_obj_array[i].active())
+                enemy_obj_array[i].update(player_obj.position());
+            // check if enemy should be spawned
+            else if (spawn_enemy)
+            {
+                enemy_obj_array[i].set(player_obj.position()); // TODO make random position offset from player
+                spawn_enemy = false;
+            }
+        }
+
+        // check collision between enemies and player
         for (i = 0; i < ENEMY_AMOUNT; i++)
         {
             // check if enemy is active
             if (enemy_obj_array[i].active())
             {
-                // update enemy
-                if (first_check)
-                    enemy_obj_array[i].update(player_obj.position());
-
                 // check collision against other enemies
                 for (j = i + 1; j < ENEMY_AMOUNT; j++)
                 {
                     if (enemy_obj_array[j].active())
-                    {
-                        if (first_check)
-                            enemy_obj_array[j].update(player_obj.position());
                         enemy_obj_array[i].handle_collision(enemy_obj_array[j].new_position(), enemy_obj_array[j].size());
-                    }
                 }
 
                 // check collision against player
@@ -136,13 +134,6 @@ void scene_level_test::execute()
                 // update enemy position
                 enemy_obj_array[i].update_position();
             }
-            // check if enemy should be spawned
-            else if (spawn_enemy)
-            {
-                enemy_obj_array[i].set(player_obj.position()); // TODO make random position offset from player
-                spawn_enemy = false;
-            }
-            first_check = false;
         }
 
         // check player shooting
@@ -161,6 +152,11 @@ void scene_level_test::execute()
                 shoot_projectile = false;
             }
         }
+
+        // update select window
+        // TODO add purchasable upgrades and move camera offset to allow space for window
+        if (bn::keypad::select_pressed())
+            select_window.set_visible(!select_window.visible());
 
         // update camera
         camera_offset = player_obj.direction_moving() * CAMERA_OFFSET_DISTANCE;

@@ -73,5 +73,6 @@ void enemy::update_position()
 void enemy::set(bn::fixed_point position)
 {
     _set_position(position);
+    _new_position = position;
     _set_active(true);
 }
