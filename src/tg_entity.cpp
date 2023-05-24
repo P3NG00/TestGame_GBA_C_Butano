@@ -30,6 +30,11 @@ bn::fixed entity::y()
     return _sprite.y();
 }
 
+bn::fixed entity::size()
+{
+    return _size;
+}
+
 bool entity::active()
 {
     return _sprite.visible();

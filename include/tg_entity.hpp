@@ -39,6 +39,7 @@ public:
     bn::fixed_point direction_facing();
     bn::fixed x();
     bn::fixed y();
+    bn::fixed size();
     bool active();
     void set_camera(bn::camera_ptr camera_obj);
 };

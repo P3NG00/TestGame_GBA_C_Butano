@@ -112,31 +112,36 @@ void scene_level_test::execute()
         first_check = true;
         for (i = 0; i < ENEMY_AMOUNT; i++)
         {
+            // check if enemy is active
             if (enemy_obj_array[i].active())
             {
+                // update enemy
                 if (first_check)
                     enemy_obj_array[i].update(player_obj.position());
 
+                // check collision against other enemies
                 for (j = i + 1; j < ENEMY_AMOUNT; j++)
                 {
                     if (enemy_obj_array[j].active())
                     {
                         if (first_check)
-                        {
                             enemy_obj_array[j].update(player_obj.position());
-                            // TODO add collision with player
-                        }
-                        enemy_obj_array[i].handle_collision(enemy_obj_array[j]);
+                        enemy_obj_array[i].handle_collision(enemy_obj_array[j].new_position(), enemy_obj_array[j].size());
                     }
                 }
+
+                // check collision against player
+                enemy_obj_array[i].handle_collision(player_obj.position(), player_obj.size());
+
+                // update enemy position
+                enemy_obj_array[i].update_position();
             }
+            // check if enemy should be spawned
             else if (spawn_enemy)
             {
                 enemy_obj_array[i].set(player_obj.position()); // TODO make random position offset from player
                 spawn_enemy = false;
             }
-
-            enemy_obj_array[i].update_position();
             first_check = false;
         }
 
