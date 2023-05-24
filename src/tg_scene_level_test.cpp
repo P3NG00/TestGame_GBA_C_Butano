@@ -178,8 +178,10 @@ void scene_level_test::execute()
 
         // update text
         text_sprites.clear();
-        text_generator.generate(-120, -76, "x: " + to_string<16>(player_obj.position().x()), text_sprites);
-        text_generator.generate(-120, -68, "y: " + to_string<16>(player_obj.position().y()), text_sprites);
+        // TODO remove debug text
+        text_generator.generate(-119, -76, "magnitude: " + to_string<20>(magnitude(player_obj.direction_moving())), text_sprites);
+        text_generator.generate(-119, -66, "x: " + to_string<20>(player_obj.position().x()), text_sprites);
+        text_generator.generate(-119, -56, "y: " + to_string<20>(player_obj.position().y()), text_sprites);
 
         // update engine last
         bn::core::update();
