@@ -15,13 +15,15 @@ void scene_level_test::execute()
 {
     // setup variables
     bn::sprite_text_generator text_generator = bn::sprite_text_generator(common::variable_8x16_sprite_font);
-    bn::vector<bn::sprite_ptr, 16> text_sprites = bn::vector<bn::sprite_ptr, 16>();
+    bn::vector<bn::sprite_ptr, 16> text_score = bn::vector<bn::sprite_ptr, 16>();
     bn::fixed_point camera_offset;
     bn::fixed_point last_camera_offset;
+    unsigned int score = 0;
     unsigned int i, j;
     unsigned short int bg_index = 0;
     bool spawn_enemy;
     bool shoot_projectile;
+    bool update_score = true;
     // setup cameras
     bn::camera_ptr camera_obj = bn::camera_ptr::create(0, 0);
     bn::camera_ptr camera_bg = bn::camera_ptr::create(0, 0);
@@ -169,8 +171,18 @@ void scene_level_test::execute()
                     // TODO implement actual damage values
                     enemy_obj_array[i].damage(0);
                     projectile_obj_array[j].damage(0);
+                    score++;
+                    update_score = true;
                 }
             }
+        }
+
+        // update score
+        if (update_score)
+        {
+            text_score.clear();
+            text_generator.generate(-119, -76, "Score: " + bn::to_string<20>(score), text_score);
+            update_score = false;
         }
 
         // update select window
