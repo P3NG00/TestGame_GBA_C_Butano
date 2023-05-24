@@ -29,12 +29,13 @@
 #define PROJECTILE_AMOUNT 8
 #define BACKGROUND_AMOUNT 2
 #define WINDOW_WIDTH 84
-#define WINDOW_CAMERA_OFFSET ((WINDOW_WIDTH + ((bn::display::width() - WINDOW_WIDTH) / 2)) - (bn::display::width() / 2))
 #define ENEMY_AMOUNT 8
 #define CAMERA_OFFSET_DISTANCE 20
 // used as 1 / CAMERA_OFFSET_DIV_LERP to smoothly move camera towards desired position
 #define CAMERA_OFFSET_DIV_LERP 20
 #define TARGET_DISTANCE 60
+
+const int WindowCameraOffset = ((WINDOW_WIDTH + ((bn::display::width() - WINDOW_WIDTH) / 2)) - (bn::display::width() / 2));
 
 void scene_level_test::execute()
 {
@@ -165,7 +166,7 @@ void scene_level_test::execute()
         camera_offset = player_obj.direction_moving() * CAMERA_OFFSET_DISTANCE;
         // add window offset if open
         if (select_window.visible())
-            camera_offset.set_x(camera_offset.x() - WINDOW_CAMERA_OFFSET);
+            camera_offset.set_x(camera_offset.x() - WindowCameraOffset);
         // linearly interpolate towards desired position
         camera_offset = last_camera_offset + ((camera_offset - last_camera_offset) / CAMERA_OFFSET_DIV_LERP);
         // update last true camera offset before rounding
