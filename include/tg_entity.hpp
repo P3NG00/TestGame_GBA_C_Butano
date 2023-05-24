@@ -23,9 +23,9 @@ class entity
 
 protected:
     bn::fixed_point _direction = bn::fixed_point(0, 0);
+    bn::fixed _size;
 
-    entity(bn::sprite_item sprite);
-    entity(bn::sprite_item sprite, bn::camera_ptr camera_obj);
+    entity(bn::sprite_item sprite, bn::fixed size);
     void _set_x(bn::fixed x);
     void _set_y(bn::fixed y);
     void _set_position(bn::fixed_point point);

@@ -18,10 +18,11 @@ void scene_level_test::execute()
     bn::vector<bn::sprite_ptr, 16> text_sprites = bn::vector<bn::sprite_ptr, 16>();
     bn::fixed_point camera_offset;
     bn::fixed_point last_camera_offset;
-    unsigned int i;
+    unsigned int i, j;
     unsigned short int bg_index = 0;
     bool spawn_enemy;
     bool shoot_projectile;
+    bool first_check;
     // setup cameras
     bn::camera_ptr camera_obj = bn::camera_ptr::create(0, 0);
     bn::camera_ptr camera_bg = bn::camera_ptr::create(0, 0);
@@ -29,7 +30,7 @@ void scene_level_test::execute()
     bn::array<projectile, PROJECTILE_AMOUNT> projectile_obj_array;
     for (i = 0; i < PROJECTILE_AMOUNT; i++)
         projectile_obj_array[i].sprite.set_camera(camera_obj);
-    bn::array<enemy, ENEMY_AMOUNT> enemy_obj_array; // TODO implement collision
+    bn::array<enemy, ENEMY_AMOUNT> enemy_obj_array;
     for (i = 0; i < ENEMY_AMOUNT; i++)
         enemy_obj_array[i].set_camera(camera_obj);
     // setup backgrounds
@@ -44,7 +45,8 @@ void scene_level_test::execute()
     // setup sprites
     bn::regular_bg_ptr select_window = bn::regular_bg_items::select_window.create_bg(0, 0);
     select_window.set_visible(false);
-    player player_obj = player(camera_obj);
+    player player_obj = player();
+    player_obj.set_camera(camera_obj);
     bn::sprite_ptr target_sprite = bn::sprite_items::target.create_sprite(0, 0);
     target_sprite.set_camera(camera_obj);
     target_sprite.set_visible(false);
@@ -105,18 +107,37 @@ void scene_level_test::execute()
         if (bn::keypad::select_pressed())
             select_window.set_visible(!select_window.visible());
 
-        // spawn enemy
-        // TODO handle enemy random spawning
-        spawn_enemy = bn::keypad::b_pressed();
+        // update enemies
+        spawn_enemy = bn::keypad::b_pressed(); // TODO make reliant on timer, not button press
+        first_check = true;
         for (i = 0; i < ENEMY_AMOUNT; i++)
         {
             if (enemy_obj_array[i].active())
-                enemy_obj_array[i].update(player_obj.position());
+            {
+                if (first_check)
+                    enemy_obj_array[i].update(player_obj.position());
+
+                for (j = i + 1; j < ENEMY_AMOUNT; j++)
+                {
+                    if (enemy_obj_array[j].active())
+                    {
+                        if (first_check)
+                        {
+                            enemy_obj_array[j].update(player_obj.position());
+                            // TODO add collision with player
+                        }
+                        enemy_obj_array[i].handle_collision(enemy_obj_array[j]);
+                    }
+                }
+            }
             else if (spawn_enemy)
             {
-                enemy_obj_array[i].set(player_obj.position());
+                enemy_obj_array[i].set(player_obj.position()); // TODO make random position offset from player
                 spawn_enemy = false;
             }
+
+            enemy_obj_array[i].update_position();
+            first_check = false;
         }
 
         // check player shooting
@@ -155,14 +176,6 @@ void scene_level_test::execute()
         // update target sprite position
         target_sprite.set_x(player_obj.position().x() + (player_obj.direction_facing().x() * TARGET_DISTANCE).round_integer());
         target_sprite.set_y(player_obj.position().y() + (player_obj.direction_facing().y() * TARGET_DISTANCE).round_integer());
-
-        // update text
-        text_sprites.clear();
-        // TODO remove debug text
-        text_generator.generate(-119, -76, "magnitude: " + to_string<20>(magnitude(player_obj.direction_moving())), text_sprites);
-        text_generator.generate(-119, -66, "x: " + to_string<20>(player_obj.position().x()), text_sprites);
-        text_generator.generate(-119, -56, "y: " + to_string<20>(player_obj.position().y()), text_sprites);
-        // TODO add debug text showing things from bn_memory like usage and free space
 
         // update engine last
         bn::core::update();

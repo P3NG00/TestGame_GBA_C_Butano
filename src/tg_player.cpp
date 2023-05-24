@@ -1,7 +1,7 @@
 #include "tg_player.hpp"
 
-player::player(bn::camera_ptr camera_obj) :
-    entity(bn::sprite_items::player, camera_obj) {}
+player::player() :
+    entity(bn::sprite_items::player, 8) {}
 
 void player::update()
 {

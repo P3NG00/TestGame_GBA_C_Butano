@@ -18,7 +18,7 @@
 
 class player : public entity{
 public:
-    player(bn::camera_ptr camera_obj);
+    player();
     void update();
 };
 
