@@ -7,39 +7,33 @@
 #include "tg_enemy.hpp"
 #include "tg_functions.hpp"
 
-enemy::enemy()
+enemy::enemy() :
+    entity(bn::sprite_items::enemy)
 {
-    sprite.set_visible(false);
+    _set_active(false);
 }
 
 void enemy::update(bn::fixed_point player_position)
 {
     // get direction
-    bn::fixed_point direction = normalize(player_position - sprite.position());
+    _direction = normalize(player_position - position());
 
-    // update position
-    sprite.set_position(sprite.position() + (direction / 4)); // TODO adjust speed
+    // update position before rounding
+    _set_position(position() + (_direction / 4)); // TODO adjust speed
 
-    // find sprite index
-    bn::fixed_point rounded_direction = bn::fixed_point(direction.x().round_integer(), direction.y().round_integer());
-    _new_sprite_index = get_sprite_index(rounded_direction);
+    // round direction
+    _direction.set_x(_direction.x().round_integer());
+    _direction.set_y(_direction.y().round_integer());
 
-    // update sprite check
-    if (_new_sprite_index != -1 && _new_sprite_index != _last_sprite_index)
-    {
-        sprite.set_tiles(bn::sprite_items::enemy.tiles_item().create_tiles(_new_sprite_index));
-        _last_sprite_index = _new_sprite_index;
-        _facing = _direction;
-    }
+    // update sprite index
+    _update_sprite_index();
+
+    // update sprite
+    _update_sprite();
 }
 
 void enemy::set(bn::fixed_point position)
 {
-    sprite.set_position(position);
-    sprite.set_visible(true);
-}
-
-bn::fixed_point enemy::position()
-{
-    return sprite.position();
+    _set_position(position);
+    _set_active(true);
 }

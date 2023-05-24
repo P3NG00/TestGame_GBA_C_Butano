@@ -10,11 +10,14 @@
 #include "tg_entity.hpp"
 #include "tg_functions.hpp"
 
-entity::entity(bn::sprite_item sprite, bn::camera_ptr camera_obj) :
+entity::entity(bn::sprite_item sprite) :
     _sprite_item(sprite),
-    _sprite(sprite.create_sprite(0, 0))
+    _sprite(sprite.create_sprite(0, 0)) {}
+
+entity::entity(bn::sprite_item sprite, bn::camera_ptr camera_obj) :
+    entity(sprite)
 {
-    _sprite.set_camera(camera_obj);
+    set_camera(camera_obj);
 }
 
 bn::fixed_point entity::position()
@@ -42,6 +45,16 @@ bn::fixed entity::y()
     return _sprite.y();
 }
 
+bool entity::active()
+{
+    return _sprite.visible();
+}
+
+void entity::set_camera(bn::camera_ptr camera_obj)
+{
+    _sprite.set_camera(camera_obj);
+}
+
 void entity::_update_sprite()
 {
     if (_new_sprite_index != -1 && _new_sprite_index != _last_sprite_index)
@@ -57,6 +70,11 @@ void entity::_update_sprite_index()
     _new_sprite_index = get_sprite_index(_direction);
 }
 
+void entity::_set_active(bool active)
+{
+    _sprite.set_visible(active);
+}
+
 void entity::_set_x(bn::fixed x)
 {
     _sprite.set_x(x);
@@ -65,4 +83,9 @@ void entity::_set_x(bn::fixed x)
 void entity::_set_y(bn::fixed y)
 {
     _sprite.set_y(y);
+}
+
+void entity::_set_position(bn::fixed_point point)
+{
+    _sprite.set_position(point);
 }

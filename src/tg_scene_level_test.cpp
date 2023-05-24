@@ -53,7 +53,7 @@ void scene_level_test::execute()
         projectile_obj_array[i].sprite.set_camera(camera_obj);
     bn::array<enemy, ENEMY_AMOUNT> enemy_obj_array; // TODO implement collision
     for (i = 0; i < ENEMY_AMOUNT; i++)
-        enemy_obj_array[i].sprite.set_camera(camera_obj);
+        enemy_obj_array[i].set_camera(camera_obj);
     // setup backgrounds
     bn::array<bn::regular_bg_ptr, BACKGROUND_AMOUNT> bg_obj_array = {
         bn::regular_bg_items::bg_1.create_bg(0, 0),
@@ -132,7 +132,7 @@ void scene_level_test::execute()
         spawn_enemy = bn::keypad::b_pressed();
         for (i = 0; i < ENEMY_AMOUNT; i++)
         {
-            if (enemy_obj_array[i].sprite.visible())
+            if (enemy_obj_array[i].active())
                 enemy_obj_array[i].update(player_obj.position());
             else if (spawn_enemy)
             {
@@ -181,6 +181,7 @@ void scene_level_test::execute()
         text_generator.generate(-119, -76, "magnitude: " + to_string<20>(magnitude(player_obj.direction_moving())), text_sprites);
         text_generator.generate(-119, -66, "x: " + to_string<20>(player_obj.position().x()), text_sprites);
         text_generator.generate(-119, -56, "y: " + to_string<20>(player_obj.position().y()), text_sprites);
+        // TODO add debug text showing things from bn_memory like usage and free space
 
         // update engine last
         bn::core::update();
