@@ -1,14 +1,3 @@
-#include "bn_blending.h"
-#include "bn_blending_actions.h"
-#include "bn_core.h"
-#include "bn_keypad.h"
-#include "bn_regular_bg_ptr.h"
-#include "bn_sprite_ptr.h"
-
-#include "bn_regular_bg_items_p3.h"
-#include "bn_sprite_items_signature.h"
-
-#include "tg_functions.hpp"
 #include "tg_scene_startup.hpp"
 
 void scene_startup::execute()

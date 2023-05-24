@@ -3,6 +3,9 @@
 
 #include "bn_fixed.h"
 #include "bn_fixed_point.h"
+#include "bn_math.h"
+
+#include "tg_constants.hpp"
 
 bool is_axis(bn::fixed_point point);
 int seconds_to_frames(bn::fixed seconds);

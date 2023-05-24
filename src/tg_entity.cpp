@@ -1,14 +1,4 @@
-#include "bn_camera_ptr.h"
-#include "bn_fixed.h"
-#include "bn_fixed_point.h"
-#include "bn_sprite_item.h"
-#include "bn_sprite_ptr.h"
-#include "bn_sprite_tiles_item.h"
-#include "bn_sprite_tiles_ptr.h"
-// TODO move includes to header files for all cpp files then include only their header file
-
 #include "tg_entity.hpp"
-#include "tg_functions.hpp"
 
 entity::entity(bn::sprite_item sprite) :
     _sprite_item(sprite),

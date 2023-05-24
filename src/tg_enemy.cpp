@@ -1,11 +1,4 @@
-#include "bn_fixed.h"
-#include "bn_fixed_point.h"
-#include "bn_sprite_tiles_ptr.h"
-
-#include "bn_sprite_items_enemy.h"
-
 #include "tg_enemy.hpp"
-#include "tg_functions.hpp"
 
 enemy::enemy() :
     entity(bn::sprite_items::enemy)

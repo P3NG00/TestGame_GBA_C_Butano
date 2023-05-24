@@ -15,7 +15,6 @@ class projectile
     bn::fixed _life;
 
 public:
-
     bn::sprite_ptr sprite = bn::sprite_items::projectile.create_sprite(0, 0);
 
     projectile();

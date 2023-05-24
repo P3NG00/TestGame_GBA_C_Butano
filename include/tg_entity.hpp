@@ -6,6 +6,10 @@
 #include "bn_fixed_point.h"
 #include "bn_sprite_item.h"
 #include "bn_sprite_ptr.h"
+#include "bn_sprite_tiles_item.h"
+#include "bn_sprite_tiles_ptr.h"
+
+#include "tg_functions.hpp"
 
 class entity
 {

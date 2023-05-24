@@ -5,10 +5,12 @@
 #include "bn_fixed.h"
 #include "bn_fixed_point.h"
 #include "bn_sprite_ptr.h"
+#include "bn_sprite_tiles_ptr.h"
 
 #include "bn_sprite_items_enemy.h"
 
 #include "tg_entity.hpp"
+#include "tg_functions.hpp"
 
 class enemy : public entity
 {
