@@ -1,6 +1,8 @@
+#include "bn_camera_ptr.h"
 #include "bn_fixed.h"
 #include "bn_fixed_point.h"
 #include "bn_keypad.h"
+#include "bn_sprite_item.h"
 #include "bn_sprite_tiles_ptr.h"
 
 #include "bn_sprite_items_player.h"
@@ -9,7 +11,10 @@
 #include "tg_functions.hpp"
 #include "tg_player.hpp"
 
-void player::handle_input()
+player::player(bn::camera_ptr camera_obj) :
+    entity(bn::sprite_items::player, camera_obj) {}
+
+void player::update()
 {
     // player movement
     _direction.set_x(0);
@@ -23,8 +28,8 @@ void player::handle_input()
     if (bn::keypad::right_held())
         _direction.set_x(_direction.x() + 1);
 
-    // find new sprite index from input
-    _new_sprite_index = get_sprite_index(_direction);
+    // update sprite index before normalizing direction
+    _update_sprite_index();
 
     // normalize direction if not on axis
     if (!is_axis(_direction))
@@ -37,30 +42,10 @@ void player::handle_input()
     // update position
     if (!bn::keypad::l_held())
     {
-        sprite.set_x(sprite.x() + _direction.x());
-        sprite.set_y(sprite.y() + _direction.y());
+        _set_x(x() + _direction.x());
+        _set_y(y() + _direction.y());
     }
 
-    // update sprite check
-    if (_new_sprite_index != -1 && _new_sprite_index != _last_sprite_index)
-    {
-        sprite.set_tiles(bn::sprite_items::player.tiles_item().create_tiles(_new_sprite_index));
-        _last_sprite_index = _new_sprite_index;
-        _facing = _direction;
-    }
-}
-
-bn::fixed_point player::position()
-{
-    return sprite.position();
-}
-
-bn::fixed_point player::direction_moving()
-{
-    return _direction;
-}
-
-bn::fixed_point player::direction_facing()
-{
-    return _facing;
+    // update sprite
+    _update_sprite();
 }

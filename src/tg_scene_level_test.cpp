@@ -66,8 +66,7 @@ void scene_level_test::execute()
     // setup sprites
     bn::regular_bg_ptr select_window = bn::regular_bg_items::select_window.create_bg(0, 0);
     select_window.set_visible(false);
-    player player_obj = player();
-    player_obj.sprite.set_camera(camera_obj);
+    player player_obj = player(camera_obj);
     bn::sprite_ptr target_sprite = bn::sprite_items::target.create_sprite(0, 0);
     target_sprite.set_camera(camera_obj);
     target_sprite.set_visible(false);
@@ -121,7 +120,7 @@ void scene_level_test::execute()
         }
 
         // handle player input
-        player_obj.handle_input();
+        player_obj.update();
 
         // update select window
         // TODO add purchasable upgrades and move camera offset to allow space for window
@@ -130,7 +129,7 @@ void scene_level_test::execute()
 
         // spawn enemy
         // TODO handle enemy random spawning
-        spawn_enemy = false;
+        spawn_enemy = bn::keypad::b_pressed();
         for (i = 0; i < ENEMY_AMOUNT; i++)
         {
             if (enemy_obj_array[i].sprite.visible())
