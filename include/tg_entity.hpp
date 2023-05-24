@@ -13,24 +13,19 @@
 
 class entity
 {
-    // initialized y to -1 to start facing up
-    bn::fixed_point _facing = bn::fixed_point(0, -1);
+protected:
     bn::sprite_item _sprite_item;
     bn::sprite_ptr _sprite;
-    int _last_sprite_index = 0;
-    int _new_sprite_index = 0;
-    // TODO implement '_life'
-
-protected:
     bn::fixed_point _direction = bn::fixed_point(0, 0);
+    // initialized y to -1 to start facing up
+    bn::fixed_point _facing = bn::fixed_point(0, -1);
     bn::fixed _size;
+    bn::fixed _life; // TODO implement on all entities
 
     entity(bn::sprite_item sprite, bn::fixed size);
     void _set_x(bn::fixed x);
     void _set_y(bn::fixed y);
     void _set_position(bn::fixed_point point);
-    void _update_sprite();
-    void _update_sprite_index();
     void _set_active(bool active);
 
 public:

@@ -1,7 +1,7 @@
 #include "tg_player.hpp"
 
 player::player() :
-    entity(bn::sprite_items::player, 8) {}
+    entity_animated(bn::sprite_items::player, 8) {}
 
 void player::update()
 {

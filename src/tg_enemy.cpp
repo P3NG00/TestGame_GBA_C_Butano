@@ -1,7 +1,7 @@
 #include "tg_enemy.hpp"
 
 enemy::enemy() :
-    entity(bn::sprite_items::enemy, 8)
+    entity_animated(bn::sprite_items::enemy, 8)
 {
     _set_active(false);
 }

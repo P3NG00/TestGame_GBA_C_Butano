@@ -28,7 +28,7 @@ void scene_level_test::execute()
     // setup objects
     bn::array<projectile, PROJECTILE_AMOUNT> projectile_obj_array;
     for (i = 0; i < PROJECTILE_AMOUNT; i++)
-        projectile_obj_array[i].sprite.set_camera(camera_obj);
+        projectile_obj_array[i].set_camera(camera_obj);
     bn::array<enemy, ENEMY_AMOUNT> enemy_obj_array;
     for (i = 0; i < ENEMY_AMOUNT; i++)
         enemy_obj_array[i].set_camera(camera_obj);
@@ -142,7 +142,7 @@ void scene_level_test::execute()
         // update projectiles
         for (i = 0; i < PROJECTILE_AMOUNT; i++)
         {
-            if (projectile_obj_array[i].sprite.visible())
+            if (projectile_obj_array[i].active())
                 projectile_obj_array[i].update();
             else if (shoot_projectile)
             {

@@ -1,14 +1,15 @@
 #include "tg_projectile.hpp"
 
-projectile::projectile()
+projectile::projectile() :
+    entity(bn::sprite_items::projectile, 4)
 {
-    sprite.set_visible(false);
+    _set_active(false);
 }
 
 void projectile::set(bn::fixed_point position, bn::fixed_point direction)
 {
-    sprite.set_visible(true);
-    sprite.set_position(position);
+    _set_active(true);
+    _set_position(position);
     _direction = direction;
     _life = seconds_to_frames(1);
 }
@@ -17,12 +18,7 @@ void projectile::update()
 {
     _life -= 1;
     if (_life > 0)
-        sprite.set_position(sprite.position() + _direction);
+        _set_position(position() + _direction);
     else
-        sprite.set_visible(false);
-}
-
-bn::fixed_point projectile::position()
-{
-    return sprite.position();
+        _set_active(false);
 }

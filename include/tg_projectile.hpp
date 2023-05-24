@@ -7,20 +7,15 @@
 
 #include "bn_sprite_items_projectile.h"
 
+#include "tg_entity.hpp"
 #include "tg_functions.hpp"
 
-class projectile
+class projectile : public entity
 {
-    bn::fixed_point _direction = bn::fixed_point(0, 0);
-    bn::fixed _life;
-
 public:
-    bn::sprite_ptr sprite = bn::sprite_items::projectile.create_sprite(0, 0);
-
     projectile();
     void set(bn::fixed_point position, bn::fixed_point direction);
     void update();
-    bn::fixed_point position();
 };
 
 #endif

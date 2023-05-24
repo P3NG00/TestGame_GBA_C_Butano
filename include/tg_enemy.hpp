@@ -9,10 +9,10 @@
 
 #include "bn_sprite_items_enemy.h"
 
-#include "tg_entity.hpp"
+#include "tg_entity_animated.hpp"
 #include "tg_functions.hpp"
 
-class enemy : public entity
+class enemy : public entity_animated
 {
     bn::fixed_point _new_position;
 public:
