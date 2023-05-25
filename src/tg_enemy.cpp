@@ -27,7 +27,7 @@ void enemy::update(bn::fixed_point player_position)
     _direction = normalize(player_position - position());
 
     // update position before rounding
-    _new_position = position() + (_direction / 4); // TODO adjust speed
+    _new_position = position() + (_direction / 2);
 
     // round direction
     _direction.set_x(_direction.x().round_integer());
@@ -45,26 +45,25 @@ void enemy::handle_collision(bn::fixed_point other_position, bn::fixed other_siz
 {
     if (distance(position(), other_position) > ENTITY_DISTANCE_CHECK || !collides_with(other_position, other_size))
         return;
-    bn::fixed size_half = _size / 2;
-    bn::fixed other_size_half = other_size / 2;
     // handle collision on per axis basis
     bn::fixed x_diff = position().x() - other_position.x();
     bn::fixed y_diff = position().y() - other_position.y();
+    bn::fixed combined_halves = (_size / 2) + (other_size / 2);
     if (abs(x_diff) > abs(y_diff))
     {
         // x axis collision
         if (x_diff > 0)
-            _new_position.set_x(other_position.x() + other_size_half + size_half);
+            _new_position.set_x(other_position.x() + combined_halves);
         else
-            _new_position.set_x(other_position.x() - other_size_half - size_half);
+            _new_position.set_x(other_position.x() - combined_halves);
     }
     else
     {
         // y axis collision
         if (y_diff > 0)
-            _new_position.set_y(other_position.y() + other_size_half + size_half);
+            _new_position.set_y(other_position.y() + combined_halves);
         else
-            _new_position.set_y(other_position.y() - other_size_half - size_half);
+            _new_position.set_y(other_position.y() - combined_halves);
     }
 }
 

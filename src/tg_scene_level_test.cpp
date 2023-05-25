@@ -14,6 +14,7 @@ const int WindowCameraOffset = ((WINDOW_WIDTH + ((bn::display::width() - WINDOW_
 void scene_level_test::execute()
 {
     // setup variables
+    bn::random random = bn::random();
     bn::sprite_text_generator text_generator = bn::sprite_text_generator(common::variable_8x16_sprite_font);
     bn::vector<bn::sprite_ptr, 16> text_score = bn::vector<bn::sprite_ptr, 16>();
     bn::fixed_point camera_offset;
@@ -21,6 +22,9 @@ void scene_level_test::execute()
     unsigned int score = 0;
     unsigned int i, j;
     unsigned short int bg_index = 0;
+    // TODO make harder by spawning more enemies, harder enemies, or waves
+    bn::fixed spawn_timer = seconds_to_frames(1);
+    bn::fixed spawn_timer_counter = spawn_timer;
     bool spawn_enemy;
     bool shoot_projectile;
     bool update_score = true;
@@ -104,7 +108,12 @@ void scene_level_test::execute()
         player_obj.update();
 
         // update enemies
-        spawn_enemy = bn::keypad::b_pressed(); // TODO make reliant on timer, not button press
+        spawn_timer_counter -= 1;
+        if (spawn_timer_counter == 0)
+        {
+            spawn_timer_counter = spawn_timer;
+            spawn_enemy = true;
+        }
         for (i = 0; i < ENEMY_AMOUNT; i++)
         {
             if (enemy_obj_array[i].active())
@@ -112,7 +121,10 @@ void scene_level_test::execute()
             // check if enemy should be spawned
             else if (spawn_enemy)
             {
-                enemy_obj_array[i].set(player_obj.position()); // TODO make random position offset from player
+                bn::fixed_point spawn_pos = normalize(bn::fixed_point(
+                    random.get_int(-120, 121),
+                    random.get_int(-80, 81)));
+                enemy_obj_array[i].set(player_obj.position() + (spawn_pos * 300));
                 spawn_enemy = false;
             }
         }
