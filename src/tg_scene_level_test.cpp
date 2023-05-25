@@ -194,6 +194,7 @@ void scene_level_test::execute()
         // reset lock on check
         lock_on_enemy_check.reset();
         // check collision between enemies and player
+        // TODO test implementing a vector that stores the locations of enemies in a grid (divide by cell size) then test collision only against enemies in the same cell
         for (i = 0; i < ENEMY_AMOUNT; i++)
         {
             // check if enemy is active
