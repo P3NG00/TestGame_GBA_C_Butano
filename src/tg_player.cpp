@@ -29,11 +29,7 @@ void player::update()
     }
 
     // update position
-    if (!bn::keypad::l_held())
-    {
-        _set_x(x() + _direction.x());
-        _set_y(y() + _direction.y());
-    }
+    _set_position(position() + _direction);
 
     // update sprite
     _update_sprite();

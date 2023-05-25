@@ -11,6 +11,13 @@
 
 const int WindowCameraOffset = ((WINDOW_WIDTH + ((bn::display::width() - WINDOW_WIDTH) / 2)) - (bn::display::width() / 2));
 
+struct lock_on_info
+{
+    bn::fixed_point direction;
+    bn::fixed distance;
+    unsigned int enemy_index;
+};
+
 void scene_level_test::execute()
 {
     // setup variables
@@ -25,9 +32,12 @@ void scene_level_test::execute()
     // TODO make harder by spawning more enemies, harder enemies, or waves
     bn::fixed spawn_timer = seconds_to_frames(1);
     bn::fixed spawn_timer_counter = spawn_timer;
-    bool spawn_enemy;
+    bool spawn_enemy = true;
     bool shoot_projectile;
     bool update_score = true;
+    bool lock_on = true;
+    bn::optional<lock_on_info> lock_on_enemy;
+    bn::optional<lock_on_info> lock_on_enemy_check;
     // setup cameras
     bn::camera_ptr camera_obj = bn::camera_ptr::create(0, 0);
     bn::camera_ptr camera_bg = bn::camera_ptr::create(0, 0);
@@ -106,6 +116,54 @@ void scene_level_test::execute()
 
         // handle player input
         player_obj.update();
+        if (bn::keypad::l_pressed())
+            lock_on = !lock_on;
+
+        // check player shooting
+        // TODO add cooldown to shots
+        shoot_projectile = bn::keypad::r_pressed();
+
+        // update projectiles
+        for (i = 0; i < PROJECTILE_AMOUNT; i++)
+        {
+            if (projectile_obj_array[i].active())
+                projectile_obj_array[i].update();
+            else if (shoot_projectile)
+            {
+                bn::fixed_point direction;
+                if (lock_on && lock_on_enemy.has_value())
+                    direction = lock_on_enemy.value().direction;
+                else
+                    direction = player_obj.direction_facing();
+                direction *= 3;
+                projectile_obj_array[i].set(player_obj.position() + direction, direction);
+                shoot_projectile = false;
+            }
+        }
+
+        // check collision between enemies and projectiles
+        for (i = 0; i < ENEMY_AMOUNT; i++)
+        {
+            // check if enemy is active
+            if (!enemy_obj_array[i].active())
+                continue;
+            // check collision against projectiles
+            for (j = 0; j < PROJECTILE_AMOUNT; j++)
+            {
+                if (!projectile_obj_array[j].active())
+                    continue;
+                if (enemy_obj_array[i].collides_with(projectile_obj_array[j].position(), projectile_obj_array[j].size()))
+                {
+                    // TODO implement actual damage values
+                    enemy_obj_array[i].damage(0);
+                    projectile_obj_array[j].damage(0);
+                    if (lock_on_enemy.has_value() && lock_on_enemy.value().enemy_index == i)
+                        lock_on_enemy.reset();
+                    score++;
+                    update_score = true;
+                }
+            }
+        }
 
         // update enemies
         spawn_timer_counter -= 1;
@@ -129,12 +187,17 @@ void scene_level_test::execute()
             }
         }
 
+        // reset lock on check
+        lock_on_enemy_check.reset();
         // check collision between enemies and player
         for (i = 0; i < ENEMY_AMOUNT; i++)
         {
             // check if enemy is active
             if (enemy_obj_array[i].active())
             {
+                bn::fixed distance_check = distance(enemy_obj_array[i].position(), player_obj.position());
+                if (lock_on && (!lock_on_enemy_check.has_value() || distance_check < lock_on_enemy_check.value().distance))
+                    lock_on_enemy_check = lock_on_info(normalize(enemy_obj_array[i].new_position() - player_obj.position()), distance_check, i);
                 // check collision against other enemies
                 for (j = i + 1; j < ENEMY_AMOUNT; j++)
                 {
@@ -149,46 +212,9 @@ void scene_level_test::execute()
                 enemy_obj_array[i].update_position();
             }
         }
-
-        // check player shooting
-        // TODO add cooldown to shots
-        shoot_projectile = bn::keypad::r_pressed();
-
-        // update projectiles
-        for (i = 0; i < PROJECTILE_AMOUNT; i++)
-        {
-            if (projectile_obj_array[i].active())
-                projectile_obj_array[i].update();
-            else if (shoot_projectile)
-            {
-                // TODO if holdling left shoulder, lock onto closest enemy direction
-                bn::fixed_point direction = player_obj.direction_facing() * 3;
-                projectile_obj_array[i].set(player_obj.position() + direction, direction);
-                shoot_projectile = false;
-            }
-        }
-
-        // check collision between enemies and projectiles
-        for (i = 0; i < ENEMY_AMOUNT; i++)
-        {
-            // check if enemy is active
-            if (!enemy_obj_array[i].active())
-                continue;
-            // check collision against projectiles
-            for (j = 0; j < PROJECTILE_AMOUNT; j++)
-            {
-                if (!projectile_obj_array[j].active())
-                    continue;
-                if (enemy_obj_array[i].collides_with(projectile_obj_array[j].position(), projectile_obj_array[j].size()))
-                {
-                    // TODO implement actual damage values
-                    enemy_obj_array[i].damage(0);
-                    projectile_obj_array[j].damage(0);
-                    score++;
-                    update_score = true;
-                }
-            }
-        }
+        // update lock on info
+        if (lock_on_enemy_check.has_value() && (!lock_on_enemy.has_value() || lock_on_enemy_check.value().enemy_index != lock_on_enemy.value().enemy_index))
+            lock_on_enemy = lock_on_enemy_check;
 
         // update score
         if (update_score)
@@ -220,8 +246,13 @@ void scene_level_test::execute()
         camera_bg.set_position(camera_obj.position() / 2);
 
         // update target sprite position
-        target_sprite.set_x(player_obj.position().x() + (player_obj.direction_facing().x() * TARGET_DISTANCE).round_integer());
-        target_sprite.set_y(player_obj.position().y() + (player_obj.direction_facing().y() * TARGET_DISTANCE).round_integer());
+        if (lock_on && lock_on_enemy.has_value())
+            target_sprite.set_position(enemy_obj_array[lock_on_enemy.value().enemy_index].position());
+        else
+        {
+            target_sprite.set_x(player_obj.position().x() + (player_obj.direction_facing().x() * TARGET_DISTANCE).round_integer());
+            target_sprite.set_y(player_obj.position().y() + (player_obj.direction_facing().y() * TARGET_DISTANCE).round_integer());
+        }
 
         // update engine last
         bn::core::update();

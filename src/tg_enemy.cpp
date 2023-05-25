@@ -43,7 +43,7 @@ void enemy::update(bn::fixed_point player_position)
 // called after update() to check new position
 void enemy::handle_collision(bn::fixed_point other_position, bn::fixed other_size)
 {
-    if (distance(position(), other_position) > ENTITY_DISTANCE_CHECK || !collides_with(other_position, other_size))
+    if (!collides_with(other_position, other_size))
         return;
     // handle collision on per axis basis
     bn::fixed x_diff = position().x() - other_position.x();
