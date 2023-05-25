@@ -7,6 +7,6 @@ This is a test project for the GameBoy Advance in C++.
 | Control | Action |
 | - | - |
 | D-Pad | Move |
-| A | Shoot |
 | Right Shoulder | Shoot |
-| Left Shoulder | Lock position while rotating |
+| Left Shoulder | Toggle Lock On Mode |
+| Select | Work In Progress Upgrades Window |
