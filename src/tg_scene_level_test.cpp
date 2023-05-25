@@ -13,7 +13,6 @@ const int WindowCameraOffset = ((WINDOW_WIDTH + ((bn::display::width() - WINDOW_
 
 struct lock_on_info
 {
-    bn::fixed_point direction;
     bn::fixed distance;
     unsigned int enemy_index;
 };
@@ -30,8 +29,10 @@ void scene_level_test::execute()
     unsigned int i, j;
     unsigned short int bg_index = 0;
     // TODO make harder by spawning more enemies, harder enemies, or waves
-    bn::fixed spawn_timer = seconds_to_frames(1);
+    const bn::fixed spawn_timer = seconds_to_frames(1);
     bn::fixed spawn_timer_counter = spawn_timer;
+    const unsigned int shoot_timer = seconds_to_frames(1);
+    unsigned int shoot_timer_counter = shoot_timer;
     bool spawn_enemy = true;
     bool shoot_projectile;
     bool update_score = true;
@@ -65,6 +66,7 @@ void scene_level_test::execute()
     bn::sprite_ptr target_sprite = bn::sprite_items::target.create_sprite(0, 0);
     target_sprite.set_camera(camera_obj);
     target_sprite.set_visible(false);
+    bn::sprite_ptr fire_bar = bn::sprite_items::fire_bar.create_sprite(89, -101);
 
     // setup fade in
     bn::blending::set_fade_color(bn::blending::fade_color_type::WHITE);
@@ -120,8 +122,9 @@ void scene_level_test::execute()
             lock_on = !lock_on;
 
         // check player shooting
-        // TODO add cooldown to shots
-        shoot_projectile = bn::keypad::r_pressed();
+        if (shoot_timer_counter > 0)
+            shoot_timer_counter -= 1;
+        shoot_projectile = bn::keypad::r_held() && shoot_timer_counter == 0;
 
         // update projectiles
         for (i = 0; i < PROJECTILE_AMOUNT; i++)
@@ -132,11 +135,12 @@ void scene_level_test::execute()
             {
                 bn::fixed_point direction;
                 if (lock_on && lock_on_enemy.has_value())
-                    direction = lock_on_enemy.value().direction;
+                    direction = normalize(enemy_obj_array[lock_on_enemy.value().enemy_index].new_position() - player_obj.position());
                 else
                     direction = player_obj.direction_facing();
                 direction *= 3;
                 projectile_obj_array[i].set(player_obj.position() + direction, direction);
+                shoot_timer_counter = shoot_timer;
                 shoot_projectile = false;
             }
         }
@@ -197,7 +201,7 @@ void scene_level_test::execute()
             {
                 bn::fixed distance_check = distance(enemy_obj_array[i].position(), player_obj.position());
                 if (lock_on && (!lock_on_enemy_check.has_value() || distance_check < lock_on_enemy_check.value().distance))
-                    lock_on_enemy_check = lock_on_info(normalize(enemy_obj_array[i].new_position() - player_obj.position()), distance_check, i);
+                    lock_on_enemy_check = lock_on_info(distance_check, i);
                 // check collision against other enemies
                 for (j = i + 1; j < ENEMY_AMOUNT; j++)
                 {
@@ -253,6 +257,14 @@ void scene_level_test::execute()
             target_sprite.set_x(player_obj.position().x() + (player_obj.direction_facing().x() * TARGET_DISTANCE).round_integer());
             target_sprite.set_y(player_obj.position().y() + (player_obj.direction_facing().y() * TARGET_DISTANCE).round_integer());
         }
+
+        // update fire bar sprite
+        int sprite_index;
+        if (shoot_timer_counter == 0)
+            sprite_index = 7;
+        else
+            sprite_index = 8 - bn::fixed(bn::fixed(shoot_timer_counter * 8) / shoot_timer).ceil_integer();
+        fire_bar.set_tiles(bn::sprite_items::fire_bar.tiles_item().create_tiles(sprite_index));
 
         // update engine last
         bn::core::update();

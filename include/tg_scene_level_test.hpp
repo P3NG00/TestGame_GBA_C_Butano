@@ -21,6 +21,7 @@
 #include "bn_regular_bg_items_bg_1.h"
 #include "bn_regular_bg_items_bg_2.h"
 #include "bn_regular_bg_items_select_window.h"
+#include "bn_sprite_items_fire_bar.h"
 #include "bn_sprite_items_target.h"
 #include "common_variable_8x16_sprite_font.h"
 
