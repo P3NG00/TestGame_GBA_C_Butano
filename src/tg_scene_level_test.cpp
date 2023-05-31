@@ -9,7 +9,7 @@
 #define CAMERA_OFFSET_DIV_LERP 20
 #define TARGET_DISTANCE 60
 
-const int WindowCameraOffset = (WINDOW_WIDTH + ((120 - WINDOW_WIDTH) / 2)) - 120;
+const int WindowCameraOffset = (WINDOW_WIDTH + ((240 - WINDOW_WIDTH) / 2)) - 120;
 
 struct lock_on_info
 {
@@ -67,6 +67,7 @@ void scene_level_test::execute()
     target_sprite.set_camera(camera_obj);
     target_sprite.set_visible(false);
     bn::sprite_ptr fire_bar = bn::sprite_items::fire_bar.create_sprite(89, -101);
+    fire_bar.set_blending_enabled(true);
 
     // setup fade in
     bn::blending::set_fade_color(bn::blending::fade_color_type::WHITE);
@@ -89,8 +90,8 @@ void scene_level_test::execute()
     fade_in = bn::blending_fade_alpha_to_action(seconds_to_frames(1), 0);
     // reset fade alpha
     bn::blending::set_fade_alpha(0);
-    // disable blending for bg 2
     bg_obj_array[1].set_blending_enabled(false);
+    fire_bar.set_blending_enabled(false);
     // enable target sprite
     target_sprite.set_visible(true);
 
