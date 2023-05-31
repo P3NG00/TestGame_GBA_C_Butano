@@ -9,7 +9,7 @@
 #define CAMERA_OFFSET_DIV_LERP 20
 #define TARGET_DISTANCE 60
 
-const int WindowCameraOffset = ((WINDOW_WIDTH + ((bn::display::width() - WINDOW_WIDTH) / 2)) - (bn::display::width() / 2));
+const int WindowCameraOffset = (WINDOW_WIDTH + ((120 - WINDOW_WIDTH) / 2)) - 120;
 
 struct lock_on_info
 {

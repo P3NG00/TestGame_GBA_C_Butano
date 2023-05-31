@@ -3,7 +3,7 @@
 
 #include "bn_fixed.h"
 
-#define FRAMES_PER_SECOND 60
+const int FramesPerSecond = 60;
 #define NORMALIZED bn::fixed(0.71) // rounded up from 1/sqrt(2)
 
 #endif

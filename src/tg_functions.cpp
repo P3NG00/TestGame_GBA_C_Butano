@@ -7,29 +7,22 @@ bool is_axis(bn::fixed_point point)
 
 int seconds_to_frames(bn::fixed seconds)
 {
-    return (seconds * FRAMES_PER_SECOND).integer();
+    return (seconds * FramesPerSecond).integer();
 }
+
+constexpr int sprite_indexes[3][3] = {
+    {7,  0, 1},
+    {6, -1, 2},
+    {5,  4, 3}
+};
 
 int get_sprite_index(bn::fixed_point direction)
 {
-    if      (direction.x() ==  0 && direction.y() ==  0)
-        return -1;
-    else if (direction.x() ==  0 && direction.y() == -1)
-        return 0;
-    else if (direction.x() ==  1 && direction.y() == -1)
-        return 1;
-    else if (direction.x() ==  1 && direction.y() ==  0)
-        return 2;
-    else if (direction.x() ==  1 && direction.y() ==  1)
-        return 3;
-    else if (direction.x() ==  0 && direction.y() ==  1)
-        return 4;
-    else if (direction.x() == -1 && direction.y() ==  1)
-        return 5;
-    else if (direction.x() == -1 && direction.y() ==  0)
-        return 6;
-    else if (direction.x() == -1 && direction.y() == -1)
-        return 7;
+    int x = direction.x().integer();
+    int y = direction.y().integer();
+
+    if (x >= -1 && x <= 1 && y >= -1 && y <= 1)
+        return sprite_indexes[y + 1][x + 1];
     else
         return -1;
 }
