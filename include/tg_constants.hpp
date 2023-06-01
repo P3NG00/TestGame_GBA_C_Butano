@@ -4,6 +4,6 @@
 #include "bn_fixed.h"
 
 const int FramesPerSecond = 60;
-#define NORMALIZED bn::fixed(0.71) // rounded up from 1/sqrt(2)
+const bn::fixed UnitDiagonalNormal = 0.71; // rounded up from 1/sqrt(2)
 
 #endif

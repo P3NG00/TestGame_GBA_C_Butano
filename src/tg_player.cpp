@@ -24,8 +24,8 @@ void player::update()
     if (!is_axis(_direction))
     {
         // TODO check keypad::b_held() to add speed boost
-        _direction.set_x(_direction.x() * NORMALIZED);
-        _direction.set_y(_direction.y() * NORMALIZED);
+        _direction.set_x(_direction.x() * UnitDiagonalNormal);
+        _direction.set_y(_direction.y() * UnitDiagonalNormal);
     }
 
     // update position

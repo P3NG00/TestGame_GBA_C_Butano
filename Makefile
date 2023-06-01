@@ -33,8 +33,8 @@ SOURCES     :=  src ../../butano/common/src
 INCLUDES    :=  include ../../butano/common/include
 DATA        :=
 GRAPHICS    :=  graphics ../../butano/common/graphics
-AUDIO       :=  audio ../../butano/common/audio
-DMGAUDIO    :=  dmg_audio ../../butano/common/dmg_audio
+AUDIO       :=  ../../butano/common/audio
+DMGAUDIO    :=  ../../butano/common/dmg_audio
 ROMTITLE    :=  TEST GAME
 ROMCODE     :=  SBTP
 USERFLAGS   :=  -DBN_CFG_PROFILER_ENABLED=true

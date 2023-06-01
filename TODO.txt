@@ -1,0 +1,1 @@
+TODO go through each class and precalculate values where possible like offsets
